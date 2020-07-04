@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+
+    api-iam:
+        build:
+            context: ./API/iam
+            dockerfile: dev.Dockerfile
+        restart: always
+        volumes:
+            - ./API/iam:/iam
+            - ./secrets/iam/POSTGRES_PASSWORD:/secrets/POSTGRES_PASSWORD
+            - ./secrets/iam/SECRET_KEY:/secrets/SECRET_KEY
+        ports:
+            - "8000:8000"
+        command: python3 -u manage.py runserver 0.0.0.0:8000
+        depends_on:
+            - data-iam
+
+    data-iam:
+        build:
+            context: ./data/iam
+            dockerfile: dev.Dockerfile
+        restart: always
+        environment:
+            POSTGRES_PASSWORD_FILE: /secrets/POSTGRES_PASSWORD
+            PGDATA: /var/lib/postgresql/data/pgdata
+            POSTGRES_DB: iam
+        volumes:
+            - ./secrets/iam/POSTGRES_PASSWORD:/secrets/POSTGRES_PASSWORD
+            - ./data/iam/db:/var/lib/postgresql/data
