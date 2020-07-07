@@ -1,6 +1,26 @@
 version: '3.7'
 services:
 
+    api-games:
+        build:
+            context: ./API/games
+            dockerfile: dev.Dockerfile
+        restart: always
+        volumes:
+            - ./API/games:/games
+            - ./secrets/games/MONGO_INITDB_ROOT_PASSWORD:/secrets/MONGO_INITDB_ROOT_PASSWORD
+            - ./secrets/games/MONGO_INITDB_ROOT_USERNAME:/secrets/MONGO_INITDB_ROOT_USERNAME
+        ports:
+            - "9000:9000"
+        #command: sbt run
+        # Use sbt in interactive mode during development
+        # 1. docker exec -it bobauth_api-games_1 /bin/bash
+        # 2. $ sbt
+        # 3. [games] $ run
+        command: sleep 3600
+        depends_on:
+            - data-games
+
     api-iam:
         build:
             context: ./API/iam
@@ -16,6 +36,21 @@ services:
         depends_on:
             - data-iam
 
+    data-games:
+        build:
+            context: ./data/games
+            dockerfile: dev.Dockerfile
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_PASSWORD_FILE: /secrets/MONGO_INITDB_ROOT_PASSWORD
+            MONGO_INITDB_ROOT_USERNAME_FILE: /secrets/MONGO_INITDB_ROOT_USERNAME
+            MONGO_INITDB_DATABASE: games
+        volumes:
+            - ./secrets/games/MONGO_INITDB_ROOT_PASSWORD:/secrets/MONGO_INITDB_ROOT_PASSWORD
+            - ./secrets/games/MONGO_INITDB_ROOT_USERNAME:/secrets/MONGO_INITDB_ROOT_USERNAME
+            - ./data/games/db:/data/db
+
+    # TODO: Set username in env variables through secrets file
     data-iam:
         build:
             context: ./data/iam

@@ -1,41 +1,4 @@
-# API
-
-API/admin/target/
-!API/admin/.mvn/wrapper/maven-wrapper.jar
-!API/admin/src/main/**
-!API/admin/src/test/**
-
-### STS ###
-API/admin/.apt_generated
-API/admin/.classpath
-API/admin/.factorypath
-API/admin/.project
-API/admin/.settings
-API/admin/.springBeans
-API/admin/.sts4-cache
-
-### IntelliJ IDEA ###
-API/admin/.idea
-API/admin/*.iws
-API/admin/*.iml
-API/admin/*.ipr
-
-### NetBeans ###
-API/admin/nbproject/private/
-API/admin/nbbuild/
-API/admin/dist/
-API/admin/nbdist/
-API/admin/.nb-gradle/
-API/admin/build/
-
-### VS Code ###
-API/admin/.vscode/
-
 
 # data
-
 data/iam/db/
-
-# front
-
-front/node_modules/
+data/games/db/
