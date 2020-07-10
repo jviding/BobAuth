@@ -8,8 +8,8 @@ services:
         restart: always
         volumes:
             - ./API/games:/games
-            - ./secrets/games/MONGO_INITDB_ROOT_PASSWORD:/secrets/MONGO_INITDB_ROOT_PASSWORD
-            - ./secrets/games/MONGO_INITDB_ROOT_USERNAME:/secrets/MONGO_INITDB_ROOT_USERNAME
+            - ./secrets/games/MONGO_NON_ROOT_USERNAME:/secrets/MONGO_NON_ROOT_USERNAME
+            - ./secrets/games/MONGO_NON_ROOT_PASSWORD:/secrets/MONGO_NON_ROOT_PASSWORD
         ports:
             - "9000:9000"
         #command: sbt run
@@ -17,7 +17,7 @@ services:
         # 1. docker exec -it bobauth_api-games_1 /bin/bash
         # 2. $ sbt
         # 3. [games] $ run
-        command: sleep 3600
+        command: sleep 36000
         depends_on:
             - data-games
 
@@ -42,24 +42,30 @@ services:
             dockerfile: dev.Dockerfile
         restart: always
         environment:
-            MONGO_INITDB_ROOT_PASSWORD_FILE: /secrets/MONGO_INITDB_ROOT_PASSWORD
             MONGO_INITDB_ROOT_USERNAME_FILE: /secrets/MONGO_INITDB_ROOT_USERNAME
+            MONGO_INITDB_ROOT_PASSWORD_FILE: /secrets/MONGO_INITDB_ROOT_PASSWORD
             MONGO_INITDB_DATABASE: games
+            MONGO_NON_ROOT_USERNAME_FILE: /secrets/MONGO_NON_ROOT_USERNAME
+            MONGO_NON_ROOT_PASSWORD_FILE: /secrets/MONGO_NON_ROOT_PASSWORD
         volumes:
-            - ./secrets/games/MONGO_INITDB_ROOT_PASSWORD:/secrets/MONGO_INITDB_ROOT_PASSWORD
             - ./secrets/games/MONGO_INITDB_ROOT_USERNAME:/secrets/MONGO_INITDB_ROOT_USERNAME
+            - ./secrets/games/MONGO_INITDB_ROOT_PASSWORD:/secrets/MONGO_INITDB_ROOT_PASSWORD
+            - ./secrets/games/MONGO_NON_ROOT_USERNAME:/secrets/MONGO_NON_ROOT_USERNAME
+            - ./secrets/games/MONGO_NON_ROOT_PASSWORD:/secrets/MONGO_NON_ROOT_PASSWORD
             - ./data/games/db:/data/db
+            - ./data/games/initMongoGamesDB.sh:/docker-entrypoint-initdb.d/initMongoGamesDB.sh
 
-    # TODO: Set username in env variables through secrets file
     data-iam:
         build:
             context: ./data/iam
             dockerfile: dev.Dockerfile
         restart: always
         environment:
+            POSTGRES_USERNAME_FILE: /secrets/POSTGRES_USERNAME
             POSTGRES_PASSWORD_FILE: /secrets/POSTGRES_PASSWORD
             PGDATA: /var/lib/postgresql/data/pgdata
             POSTGRES_DB: iam
         volumes:
+            - ./secrets/iam/POSTGRES_USERNAME:/secrets/POSTGRES_USERNAME
             - ./secrets/iam/POSTGRES_PASSWORD:/secrets/POSTGRES_PASSWORD
             - ./data/iam/db:/var/lib/postgresql/data

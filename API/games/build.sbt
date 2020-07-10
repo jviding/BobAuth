@@ -11,7 +11,7 @@ libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
 // Custom dependencies
-libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.9.0"
+libraryDependencies += "org.reactivemongo" %% "play2-reactivemongo" % "0.20.11-play28"
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.bob.controllers._"
