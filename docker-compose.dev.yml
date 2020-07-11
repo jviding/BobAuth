@@ -6,10 +6,10 @@ services:
             context: ./API/games
             dockerfile: dev.Dockerfile
         restart: always
+        env_file:
+            - ./secrets/games/MONGO_CONNECTION_STRING.env
         volumes:
             - ./API/games:/games
-            - ./secrets/games/MONGO_NON_ROOT_USERNAME:/secrets/MONGO_NON_ROOT_USERNAME
-            - ./secrets/games/MONGO_NON_ROOT_PASSWORD:/secrets/MONGO_NON_ROOT_PASSWORD
         ports:
             - "9000:9000"
         #command: sbt run

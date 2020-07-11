@@ -7,7 +7,6 @@ import scala.concurrent.{ ExecutionContext, Future }
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
-import play.api.libs.json.Json
 
 import play.modules.reactivemongo.{
     MongoController,
@@ -17,15 +16,13 @@ import play.modules.reactivemongo.{
 
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
-import reactivemongo.api.commands.bson.BSONFindAndModifyCommand.FindAndModifyResult
-
-import reactivemongo.api.Cursor
+//import reactivemongo.api.Cursor
 import reactivemongo.api.ReadPreference
 import reactivemongo.play.json._
-import reactivemongo.play.json.collection._
+//import reactivemongo.play.json.collection._
 
-import models._
-import models.JsonFormats._
+//import models._
+//import models.JsonFormats._
 
 
 class GameController @Inject() (
@@ -40,11 +37,11 @@ class GameController @Inject() (
     def load(userID: String, gameName: String) = Action.async {
         val selector = BSONDocument("userID" -> userID, "gameName" -> gameName)
         val projection = BSONDocument("_id" -> 0, "gameState" -> 1)
-        
+
         val gameOption: Future[Option[JsObject]] = gamesCollection.flatMap(
             _.find(selector, projection).one[JsObject](ReadPreference.primary)
         )
-        
+
         gameOption.map(option => Ok(option.get))
     }
 
@@ -55,9 +52,9 @@ class GameController @Inject() (
 
         val gameOption: Future[Option[JsObject]] = gamesCollection.flatMap(
             _.findAndUpdate(
-                selector, 
-                update, 
-                fetchNewObject = true, 
+                selector,
+                update,
+                fetchNewObject = true,
                 upsert = true,
                 fields = projection
             )
