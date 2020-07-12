@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
 import json
 
-@require_http_methods(["POST"])
+@require_http_methods(["GET"])
 def profile(request):
     if request.user.is_authenticated:
         username = request.user.username

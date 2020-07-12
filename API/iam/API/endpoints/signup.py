@@ -11,6 +11,7 @@ def signup(request):
     # TODO: Ensure email is unique and valid email
     # TODO: Ensure quality password
     # TODO: Ensure username minimum length
+    # TODO: Handle errors
     username = json.loads(request.body)['username']
     password = json.loads(request.body)['password']
     email = json.loads(request.body)['email']
