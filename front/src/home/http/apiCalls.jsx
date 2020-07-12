@@ -44,7 +44,7 @@ export default class BobAPI {
 
     profile() {
         return new Promise((resolve, reject) => {
-            this.Requests.POST(this.URLs.profile, {})
+            this.Requests.GET(this.URLs.profile)
             .then((response) => {
                 if (response.status === 200) {
                     resolve(JSON.parse(response.response))

@@ -28,13 +28,15 @@ export default class Requests {
         })
     }
 
-    GET(url, params) {
+    GET(url, params = false) {
         let urlParams = ''
-        if (params.length > 0) {
-            urlParams = params.reduce((query, param) => {
+        if (!!params) {
+            /*urlParams = params.reduce((query, param) => {
                 return query + '&' + param.key + '=' + param.value
             }, '')
-            urlParams = '?' + urlParams.substr(1)
+            urlParams = '?' + urlParams.substr(1)*/
+            console.warn('TODO: Parse GET parameters')
+            // Notice that params is an object!! use Object.entries()
         }
         return this.makeRequest('GET', url + urlParams, null)
     }
