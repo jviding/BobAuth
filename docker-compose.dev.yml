@@ -1,6 +1,7 @@
 version: '3.7'
 services:
 
+    # TODO: Close ports on host by removing ports entry
     api-games:
         build:
             context: ./API/games
@@ -21,6 +22,21 @@ services:
         depends_on:
             - data-games
 
+    api-home:
+        build:
+            context: ./API/home
+            dockerfile: dev.Dockerfile
+        restart: always
+        volumes:
+            - ./API/home:/home
+        ports:
+            - "3000:3000"
+        command: npm start
+        depends_on:
+            - api-games
+            - api-iam
+
+    # TODO: Close ports on host by removing ports entry
     api-iam:
         build:
             context: ./API/iam
