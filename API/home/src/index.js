@@ -34,7 +34,10 @@ app.get('/profile', (req, res) => {
 
 app.post('/signup', (req, res) => {
     (require('./endpoints/signup.js'))(req)
-    .then(() => res.sendStatus(200).end())
+    .then((responseCookies) => {
+        res.set(responseCookies)
+        res.sendStatus(200).end()
+    })
     .catch(() => res.sendStatus(403).end())
 })
 

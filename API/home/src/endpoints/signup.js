@@ -22,7 +22,7 @@ module.exports = (req) => {
 
         const REQ = HTTP.request(REQ_OPTIONS, (res) => {
             if (res.statusCode === 200) {
-                resolve()
+                resolve({ 'set-cookie': res.headers['set-cookie'] })
             } else {
                 reject()
             }

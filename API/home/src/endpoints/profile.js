@@ -20,7 +20,14 @@ module.exports = (req) => {
                 res.setEncoding('utf8')
                 let body = ''
                 res.on('data', (chunk) => body += chunk)
-                res.on('end', () => resolve(JSON.parse(body)))
+                res.on('end', () => {
+                    let user = JSON.parse(body)
+                    resolve({
+                        username: user.username,
+                        email: user.email,
+                        isAdmin: user.isAdmin
+                    })
+                })
             } else {
                 reject()
             }
