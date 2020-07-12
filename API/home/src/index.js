@@ -1,14 +1,41 @@
-const http = require('http')
+"use strict"
 
-const hostname = '127.0.0.1'
+const express = require('express')
+const cookieParser = require('cookie-parser')
+const app = express()
 const port = 3000
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'text/plain')
-    res.end('Hello World!')
+app.use(express.json())
+app.use(cookieParser())
+
+app.post('/login', (req, res) => {
+    (require('./endpoints/login.js'))(req)
+    .then((responseCookies) => {
+        res.set(responseCookies)
+        res.sendStatus(200).end()
+    })
+    .catch(() => res.sendStatus(404).end())
 })
 
-server.listen(port, hostname, () => {
-    console.log('Server running at http://' + hostname + ':' + port)
+app.post('/logout', (req, res) => {
+    (require('./endpoints/logout.js'))(req)
+    .then((responseCookies) => {
+        res.set(responseCookies)
+        res.sendStatus(200).end()
+    })
+    .catch(() => res.sendStatus(404).end())
 })
+
+app.get('/profile', (req, res) => {
+    (require('./endpoints/profile.js'))(req)
+    .then((responseBody) => res.status(200).json(responseBody))
+    .catch(() => res.sendStatus(403).end())
+})
+
+app.post('/signup', (req, res) => {
+    (require('./endpoints/signup.js'))(req)
+    .then(() => res.sendStatus(200).end())
+    .catch(() => res.sendStatus(403).end())
+})
+
+app.listen(port, () => console.log('Server running at http://localhost:' + port))
