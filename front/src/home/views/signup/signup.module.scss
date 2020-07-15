@@ -1,0 +1,16 @@
+.cell {
+    width: 50%;
+    text-align: left;
+    white-space: nowrap;
+
+}
+.cell:first-child {
+    padding-right: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.errorMessage {
+    color: red;
+    padding-top: 10px;
+}

@@ -1,7 +1,7 @@
 from django.urls import path
 from .endpoints import login
 from .endpoints import logout
-from .endpoints import profile
+from .endpoints.profile import profile
 from .endpoints import signup
 
 urlpatterns = [

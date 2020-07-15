@@ -27,8 +27,17 @@ app.post('/logout', (req, res) => {
 })
 
 app.get('/profile', (req, res) => {
-    (require('./endpoints/profile.js'))(req)
+    (require('./endpoints/profile/read.js'))(req)
     .then((responseBody) => res.status(200).json(responseBody))
+    .catch(() => res.sendStatus(403).end())
+})
+
+app.put('/profile', (req, res) => {
+    (require('./endpoints/profile/update.js'))(req)
+    .then(([responseCookies, responseBody]) => {
+        if (!!responseCookies) res.set(responseCookies)
+        res.status(200).json(responseBody)
+    })
     .catch(() => res.sendStatus(403).end())
 })
 

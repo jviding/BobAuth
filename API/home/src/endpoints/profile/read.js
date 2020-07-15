@@ -4,9 +4,9 @@ module.exports = (req) => {
     return new Promise((resolve, reject) => {
 
         const REQ_OPTIONS = {
-            hostname: (require('../urls.js')).iam.host.hostname,
-            port: (require('../urls.js')).iam.host.port,
-            path: (require('../urls.js')).iam.paths.profile,
+            hostname: (require('../../urls.js')).iam.host.hostname,
+            port: (require('../../urls.js')).iam.host.port,
+            path: (require('../../urls.js')).iam.paths.profile,
             method: 'GET',
             headers: {}
         }

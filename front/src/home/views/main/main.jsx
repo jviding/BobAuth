@@ -10,7 +10,7 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
-        window.BobAPI.profile()
+        window.BobAPI.getProfile()
         .then((response) => { this.setState({ username: response.username }) })
         .catch((e) => { console.warn(e) })
     }

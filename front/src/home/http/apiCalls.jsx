@@ -9,8 +9,8 @@ export default class BobAPI {
 
         this.login = this.login.bind(this)
         this.logout = this.logout.bind(this)
-        this.profile = this.profile.bind(this)
         this.signup = this.signup.bind(this)
+        this.getProfile = this.getProfile.bind(this)
     }
 
     login(username, password) {
@@ -42,7 +42,22 @@ export default class BobAPI {
         })
     }
 
-    profile() {
+    signup(username, password, email) {
+        return new Promise((resolve, reject) => {
+            const BODY = { username: username, password: password, email: email }
+            this.Requests.POST(this.URLs.signup, BODY)
+            .then((response) => {
+                if (response.status === 200) {
+                    resolve(true)
+                } else {
+                    reject('Signup failed!')
+                }
+            })
+            .catch((e) => { reject(e) })
+        })
+    }
+
+    getProfile() {
         return new Promise((resolve, reject) => {
             this.Requests.GET(this.URLs.profile)
             .then((response) => {
@@ -56,15 +71,15 @@ export default class BobAPI {
         })
     }
 
-    signup(username, password, email) {
+    updateProfile(newEmail, newPassword, password) {
         return new Promise((resolve, reject) => {
-            const BODY = { username: username, password: password, email: email }
-            this.Requests.POST(this.URLs.signup, BODY)
+            const BODY = { newEmail: newEmail, newPassword: newPassword, password: password }
+            this.Requests.PUT(this.URLs.profile, BODY)
             .then((response) => {
                 if (response.status === 200) {
-                    resolve(true)
+                    resolve(JSON.parse(response.response))
                 } else {
-                    reject('Signup failed!')
+                    reject('Failed to update profile!')
                 }
             })
             .catch((e) => { reject(e) })

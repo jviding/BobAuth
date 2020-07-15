@@ -8,6 +8,7 @@ def login(request):
     # TODO: JSON validation
     # TODO: Login CSRF protection (X is logged in as Y by malicious site)
     # If is_authenticated then don't login user
+    # TODO: Brute force protection (Captcha to front-end app?)
     username = json.loads(request.body)['username']
     password = json.loads(request.body)['password']
     user = auth.authenticate(username=username, password=password)
