@@ -31,11 +31,8 @@ export default class BobAPI {
 
     saveGame() {
         return new Promise((resolve, reject) => {
-            const BODY = {
-                gameName: 'game1',
-                gameState: { state: 'good' }
-            }
-            this.Requests.PUT(this.URLs.saveGame, BODY)
+            const BODY = { test1: 'data1', test2: 'data2', test3: { test4: 'test4' } }
+            this.Requests.PUT(this.URLs.saveGame + '?gameName=bob', BODY)
             .then((response) => {
                 if (response.status === 200) {
                     resolve(JSON.parse(response.response))

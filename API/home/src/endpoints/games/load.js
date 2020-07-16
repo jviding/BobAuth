@@ -21,6 +21,7 @@ module.exports = (req) => {
             return sendRequest(req, REQ_OPTIONS)
         })
         .then((res) => {
-            return Promise.resolve({})
+            console.log(res)
+            return Promise.resolve(JSON.parse(res.body))
         })
 }

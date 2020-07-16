@@ -18,8 +18,14 @@ app.get('/games/load', (req, res) => {
     .catch(() => res.sendStatus(403).end())
 })
 
-app.put('/games/:gameName/save', (req, res) => {
-    res.sendStatus(404).end()
+app.put('/games/save', (req, res) => {
+    (require('./endpoints/games/save.js'))(req)
+    .then((body) => res.status(200).json(body))
+    .catch((e) => {
+        console.log(e)
+        return Promise.reject()
+    })
+    .catch(() => res.sendStatus(403).end())
 })
 
 app.post('/login', (req, res) => {

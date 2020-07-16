@@ -16,13 +16,13 @@ export default class Main extends React.Component {
 
     loadGame() {
         window.BobAPI.loadGame({ gameName: 'bob' })
-        .then((res) => this.setState({ loaded: res }))
+        .then((res) => this.setState({ loaded: JSON.stringify(res) }))
         .catch((e) => console.warn(e))
     }
 
     saveGame() {
         window.BobAPI.saveGame()
-        .then((res) => this.setState({ saved: res }))
+        .then((res) => this.setState({ saved: JSON.stringify(res) }))
         .catch((e) => console.warn(e))
     }
 
@@ -49,8 +49,8 @@ export default class Main extends React.Component {
                         Save
                     </div>
                     <br />
-                    <div>Load:</div>
-                    <div>Save:</div>
+                    <div>Load: {this.state.loaded}</div>
+                    <div>Save: {this.state.saved}</div>
                 </div>
             )
         } else {

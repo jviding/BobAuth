@@ -1,6 +1,6 @@
-package models
+//package models
 
-case class Game(
+/*case class Game(
     userID: String,
     gameName: String,
     gameState: String
@@ -11,3 +11,4 @@ object JsonFormats {
 
     implicit val gameFormat = Json.format[Game]
 }
+*/

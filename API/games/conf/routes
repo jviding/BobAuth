@@ -4,7 +4,7 @@
 # ~~~~
 
 GET     /load                       controllers.GameController.load(userID: String, gameName: String)
-GET     /save/:userID/:gameName     controllers.GameController.save(userID: String, gameName: String)
+PUT     /save                       controllers.GameController.save(userID: String, gameName: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
