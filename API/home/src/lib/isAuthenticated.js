@@ -1,22 +1,21 @@
 "use strict";
 
-const sendRequest = require('../lib/sendRequest.js')
+const sendRequest = require('./sendRequest.js')
 
 module.exports = (req) => {
 
     const REQ_OPTIONS = {
-        method: 'POST',
+        method: 'GET',
         host: 'iam',
-        endpoint: 'logout',
+        endpoint: 'profile',
         urlParams: false,
-        payload: {}
+        payload: false
     }
 
     return sendRequest(req, REQ_OPTIONS)
         .then((res) => {
             if (res.statusCode === 200) {
-                const COOKIES = res.headers['set-cookie']
-                return Promise.resolve(COOKIES)
+                return Promise.resolve(JSON.parse(res.body))
             } else {
                 return Promise.reject()
             }

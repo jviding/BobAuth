@@ -11,6 +11,39 @@ export default class BobAPI {
         this.logout = this.logout.bind(this)
         this.signup = this.signup.bind(this)
         this.getProfile = this.getProfile.bind(this)
+
+        this.loadGame = this.loadGame.bind(this)
+        this.saveGame = this.saveGame.bind(this)
+    }
+
+    loadGame(urlParams) {
+        return new Promise((resolve, reject) => {
+            this.Requests.GET(this.URLs.loadGame, urlParams)
+            .then((response) => {
+                if (response.status === 200) {
+                    resolve(JSON.parse(response.response))
+                } else {
+                    reject('Failed to load game!')
+                }
+            })
+        })
+    }
+
+    saveGame() {
+        return new Promise((resolve, reject) => {
+            const BODY = {
+                gameName: 'game1',
+                gameState: { state: 'good' }
+            }
+            this.Requests.PUT(this.URLs.saveGame, BODY)
+            .then((response) => {
+                if (response.status === 200) {
+                    resolve(JSON.parse(response.response))
+                } else {
+                    reject('Failed to save game!')
+                }
+            })
+        })
     }
 
     login(username, password) {
@@ -21,10 +54,9 @@ export default class BobAPI {
                 if (response.status === 200) {
                     resolve(true)
                 } else {
-                    reject('Incorrect credentials!')
+                    reject('Login failed!')
                 }
             })
-            .catch((e) => { reject(e) })
         })
     }
 
@@ -38,7 +70,6 @@ export default class BobAPI {
                     reject('Logout failed!')
                 }
             })
-            .catch((e) => { reject(e) })
         })
     }
 
@@ -53,7 +84,6 @@ export default class BobAPI {
                     reject('Signup failed!')
                 }
             })
-            .catch((e) => { reject(e) })
         })
     }
 
@@ -67,7 +97,6 @@ export default class BobAPI {
                     reject('Failed to load profile!')
                 }
             })
-            .catch((e) => { reject(e) })
         })
     }
 
@@ -82,7 +111,6 @@ export default class BobAPI {
                     reject('Failed to update profile!')
                 }
             })
-            .catch((e) => { reject(e) })
         })
     }
 }

@@ -64,6 +64,7 @@ module.exports = {
     ],
     devServer: {
         publicPath: "/static/",
-        disableHostCheck: true
+        disableHostCheck: true,
+        port: 8080
     }
 }

@@ -1,37 +1,27 @@
-const HTTP = require('http')
+"use strict";
+
+const sendRequest = require('../lib/sendRequest.js')
 
 module.exports = (req) => {
-    return new Promise((resolve, reject) => {
 
-        const POST_DATA = JSON.stringify({
+    const REQ_OPTIONS = {
+        method: 'POST',
+        host: 'iam',
+        endpoint: 'login',
+        urlParams: false,
+        payload: {
             username: req.body.username,
             password: req.body.password
-        })
-
-        const REQ_OPTIONS = {
-            hostname: (require('../urls.js')).iam.host.hostname,
-            port: (require('../urls.js')).iam.host.port,
-            path: (require('../urls.js')).iam.paths.login,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(POST_DATA)
-            }
         }
+    }
 
-        if (!!req.cookies.sessionid) {
-            REQ_OPTIONS.headers['Cookie'] = 'sessionid=' + req.cookies.sessionid
-        }
-
-        const REQ = HTTP.request(REQ_OPTIONS, (res) => {
+    return sendRequest(req, REQ_OPTIONS)
+        .then((res) => {
             if (res.statusCode === 200) {
-                resolve({ 'set-cookie': res.headers['set-cookie'] })
+                const COOKIES = res.headers['set-cookie']
+                return Promise.resolve(COOKIES)
             } else {
-                reject()
+                return Promise.reject()
             }
         })
-
-        REQ.write(POST_DATA)
-        REQ.end()
-    })
 }

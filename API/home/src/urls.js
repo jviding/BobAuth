@@ -1,9 +1,9 @@
+"use strict";
+
 module.exports = {
     iam: {
-        host: {
-            hostname: 'api-iam',
-            port: 8000
-        },
+        hostname: 'api-iam',
+        port: 8000,
         paths: {
             login: '/login',
             logout: '/logout',
@@ -12,10 +12,8 @@ module.exports = {
         }
     },
     games: {
-        host: {
-            hostname: 'api-games',
-            port: 9000
-        },
+        hostname: 'api-games',
+        port: 9000,
         paths: {
             load: '/load',
             save: '/save'

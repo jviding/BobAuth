@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 const express = require('express')
 const cookieParser = require('cookie-parser')
@@ -8,10 +8,24 @@ const port = 3000
 app.use(express.json())
 app.use(cookieParser())
 
+app.get('/games/load', (req, res) => {
+    (require('./endpoints/games/load.js'))(req)
+    .then((body) => res.status(200).json(body))
+    .catch((e) => {
+        console.log(e)
+        return Promise.reject()
+    })
+    .catch(() => res.sendStatus(403).end())
+})
+
+app.put('/games/:gameName/save', (req, res) => {
+    res.sendStatus(404).end()
+})
+
 app.post('/login', (req, res) => {
     (require('./endpoints/login.js'))(req)
-    .then((responseCookies) => {
-        res.set(responseCookies)
+    .then((cookies) => {
+        res.set({ 'set-cookie': cookies })
         res.sendStatus(200).end()
     })
     .catch(() => res.sendStatus(404).end())
@@ -19,8 +33,8 @@ app.post('/login', (req, res) => {
 
 app.post('/logout', (req, res) => {
     (require('./endpoints/logout.js'))(req)
-    .then((responseCookies) => {
-        res.set(responseCookies)
+    .then((cookies) => {
+        res.set({ 'set-cookie': cookies })
         res.sendStatus(200).end()
     })
     .catch(() => res.sendStatus(404).end())
@@ -28,23 +42,23 @@ app.post('/logout', (req, res) => {
 
 app.get('/profile', (req, res) => {
     (require('./endpoints/profile/read.js'))(req)
-    .then((responseBody) => res.status(200).json(responseBody))
+    .then((body) => res.status(200).json(body))
     .catch(() => res.sendStatus(403).end())
 })
 
 app.put('/profile', (req, res) => {
     (require('./endpoints/profile/update.js'))(req)
-    .then(([responseCookies, responseBody]) => {
-        if (!!responseCookies) res.set(responseCookies)
-        res.status(200).json(responseBody)
+    .then(([cookies, body]) => {
+        if (!!cookies) res.set({ 'set-cookie': cookies })
+        res.status(200).json(body)
     })
     .catch(() => res.sendStatus(403).end())
 })
 
 app.post('/signup', (req, res) => {
     (require('./endpoints/signup.js'))(req)
-    .then((responseCookies) => {
-        res.set(responseCookies)
+    .then((cookies) => {
+        res.set({ 'set-cookie': cookies })
         res.sendStatus(200).end()
     })
     .catch(() => res.sendStatus(403).end())

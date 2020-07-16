@@ -31,12 +31,8 @@ export default class Requests {
     GET(url, params = false) {
         let urlParams = ''
         if (!!params) {
-            /*urlParams = params.reduce((query, param) => {
-                return query + '&' + param.key + '=' + param.value
-            }, '')
-            urlParams = '?' + urlParams.substr(1)*/
-            console.warn('TODO: Parse GET parameters')
-            // Notice that params is an object!! use Object.entries()
+            // TODO: UrlParams as Base64
+            urlParams = '?' + Object.entries(params).map(([k, v]) => { return k + '=' + v }).join('&')
         }
         return this.makeRequest('GET', url + urlParams, null)
     }
