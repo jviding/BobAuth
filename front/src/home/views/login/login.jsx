@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react'
 import inputStyles from '../../components/input/textInput.module.scss'
 import buttonStyles from '../../components/button/button.module.scss'

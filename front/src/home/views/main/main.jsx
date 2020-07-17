@@ -1,5 +1,5 @@
+'use strict'
 import React from 'react'
-
 import buttonStyles from '../../components/button/button.module.scss'
 
 export default class Main extends React.Component {
@@ -15,13 +15,13 @@ export default class Main extends React.Component {
     }
 
     loadGame() {
-        window.BobAPI.loadGame({ gameName: 'bob' })
+        window.BobAPI.loadGame()
         .then((res) => this.setState({ loaded: JSON.stringify(res) }))
         .catch((e) => console.warn(e))
     }
 
     saveGame() {
-        window.BobAPI.saveGame()
+        window.BobAPI.saveGame(this.state.username)
         .then((res) => this.setState({ saved: JSON.stringify(res) }))
         .catch((e) => console.warn(e))
     }

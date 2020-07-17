@@ -1,3 +1,4 @@
+'use strict'
 import URLs from './urls.jsx'
 import Requests from './requests.jsx'
 
@@ -11,13 +12,15 @@ export default class BobAPI {
         this.logout = this.logout.bind(this)
         this.signup = this.signup.bind(this)
         this.getProfile = this.getProfile.bind(this)
+        this.updateProfile = this.updateProfile.bind(this)
 
         this.loadGame = this.loadGame.bind(this)
         this.saveGame = this.saveGame.bind(this)
     }
 
-    loadGame(urlParams) {
+    loadGame() {
         return new Promise((resolve, reject) => {
+            const urlParams = { gameName: 'bobz' }
             this.Requests.GET(this.URLs.loadGame, urlParams)
             .then((response) => {
                 if (response.status === 200) {
@@ -29,10 +32,10 @@ export default class BobAPI {
         })
     }
 
-    saveGame() {
+    saveGame(uname) {
         return new Promise((resolve, reject) => {
-            const BODY = { test1: 'data1', test2: 'data2', test3: { test4: 'test4' } }
-            this.Requests.PUT(this.URLs.saveGame + '?gameName=bob', BODY)
+            const BODY = { test1: uname }
+            this.Requests.PUT(this.URLs.saveGame + '?gameName=bobz', BODY)
             .then((response) => {
                 if (response.status === 200) {
                     resolve(JSON.parse(response.response))
