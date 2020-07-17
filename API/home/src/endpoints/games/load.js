@@ -21,7 +21,10 @@ module.exports = (req) => {
             return sendRequest(req, REQ_OPTIONS)
         })
         .then((res) => {
-            console.log(res)
-            return Promise.resolve(JSON.parse(res.body))
+            if (res.statusCode === 200) {
+                return Promise.resolve(JSON.parse(res.body))
+            } else {
+                return Promise.reject()
+            }
         })
 }

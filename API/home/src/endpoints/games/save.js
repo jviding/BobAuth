@@ -20,5 +20,11 @@ module.exports = (req) => {
             REQ_OPTIONS.urlParams.userID = res.userID
             return sendRequest(req, REQ_OPTIONS)
         })
-        .then((res) => { return Promise.resolve(JSON.parse(res.body)) })
+        .then((res) => {
+            if (res.statusCode === 200) {
+                return Promise.resolve(JSON.parse(res.body))
+            } else {
+                return Promise.reject()
+            }
+        })
 }

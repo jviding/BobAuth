@@ -38,10 +38,15 @@ class GameController @Inject() (
             _.find(selector, projection).one[JsObject](ReadPreference.primary)
         )
 
-        gameOption.map { option => 
-            val game: JsObject = option.get
-            val gameState: JsValue = (game \ "gameState").get
-            Ok(gameState)
+        val gameStateOption: Future[Any] = gameOption.map {
+            case Some(game) => game \ "gameState"
+            case None => None
+        }
+
+        gameStateOption.map {
+            case JsDefined(gameState) => Ok(gameState)
+            case undefined: JsUndefined => NotFound
+            case None => NotFound
         }
     }
 
@@ -64,10 +69,15 @@ class GameController @Inject() (
             .map(_.result[JsObject])
         )
 
-        gameOption.map { option =>
-            val game: JsObject = option.get
-            val newGameState: JsValue = (game \ "gameState").get
-            Ok(newGameState)
+        val gameStateOption: Future[Any] = gameOption.map {
+            case Some(game) => game \ "gameState"
+            case None => None
+        }
+
+        gameStateOption.map {
+            case JsDefined(gameState) => Ok(gameState)
+            case undefined: JsUndefined => NotFound
+            case None => NotFound
         }
      }
 
