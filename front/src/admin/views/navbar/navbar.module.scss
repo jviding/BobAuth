@@ -1,0 +1,27 @@
+.navbar {
+    display: table-row;
+    height: 50px;
+    background: #1a1a1a;
+    color: white;
+
+    .btn {
+        display: table-cell;
+        white-space: nowrap;
+        vertical-align: middle;
+        padding: 0 15px 0 15px;
+
+        &:hover {
+            background: black;
+            cursor: pointer;
+        }
+    }
+    .btn.bold {
+        font-size: 150%;
+        font-weight: bold;
+    }
+
+    .extender {
+        display: table-cell;
+        width: 100%;
+    }
+}

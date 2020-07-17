@@ -1,10 +1,66 @@
-'use strict';
+'use strict'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Navbar from './views/navbar/navbar.jsx'
+import Main from './views/main/main.jsx'
+import Games from './views/games/games.jsx'
+import Login from './views/login/login.jsx'
+import Profile from './views/profile/profile.jsx'
+import Users from './views/users/users.jsx'
+import styles from './styles.module.scss'
 
-/* SASS bundle */
-//require('./sass/main.scss')
+import BobAPI from './http/apiCalls.jsx'
+window.BobAPI = new BobAPI()
 
-/* Vulnpie UI */
-import React from 'react';
-import ReactDOM from 'react-dom';
-//import Vulnpie from './jsx/vulnpie.jsx';
-ReactDOM.render(<div>Hello</div>, document.getElementById('root'));
+class Index extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            view: 'main',
+            isAuthenticated: true
+        }
+        this.checkSession = this.checkSession.bind(this)
+    }
+
+    checkSession() {
+        /*window.BobAPI.getProfile()
+        .then((response) => {
+            this.setState({ view: 'main', isAuthenticated: true, isAdmin: !!response.isAdmin })
+        })
+        .catch((e) => {
+            console.warn(e)
+            this.setState({ view: 'main', isAuthenticated: false, isAdmin: false })
+        })*/
+    }
+
+    componentDidMount() {
+        this.checkSession()
+    }
+
+    render() {
+        return (
+            <div>
+                <Navbar
+                    navigate={(newView) => this.setState({ view: newView })}
+                    isAuthenticated={this.state.isAuthenticated}
+                    wasLoggedOut={this.checkSession} />
+                <div className={styles.a}>
+                    <div className={styles.b}>
+                        <div className={styles.c}>
+                            <div className={styles.jumbotron}>
+                                {this.state.view === 'main' && <Main isAuthenticated={this.state.isAuthenticated} />}
+                                {this.state.view === 'games' && <Games />}
+                                {this.state.view === 'login' && <Login wasLoggedIn={this.checkSession} />}
+                                {this.state.view === 'profile' && <Profile />}
+                                {this.state.view === 'users' && <Users />}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
+ReactDOM.render(<Index />, document.getElementById('root'))
