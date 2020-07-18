@@ -1,7 +1,10 @@
 version: '3.7'
 services:
 
-    # TODO: Close ports on host by removing ports entry
+    # api-admin:
+    # ports:
+    # - "7000:7000"
+
     api-games:
         build:
             context: ./API/games
@@ -11,14 +14,15 @@ services:
             - ./secrets/games/MONGO_CONNECTION_STRING.env
         volumes:
             - ./API/games:/games
-        ports:
-            - "9000:9000"
-        #command: sbt run
+        # Use if should be available on host
+        #ports:
+        #    - "9000:9000"
+        command: sbt run
         # Use sbt in interactive mode during development
         # 1. docker exec -it bobauth_api-games_1 /bin/bash
         # 2. $ sbt
         # 3. [games] $ run
-        command: sleep 36000
+        # command: sleep 36000
         depends_on:
             - data-games
 
@@ -36,7 +40,6 @@ services:
             - api-games
             - api-iam
 
-    # TODO: Close ports on host by removing ports entry
     api-iam:
         build:
             context: ./API/iam
@@ -46,8 +49,9 @@ services:
             - ./API/iam:/iam
             - ./secrets/iam/POSTGRES_PASSWORD:/secrets/POSTGRES_PASSWORD
             - ./secrets/iam/SECRET_KEY:/secrets/SECRET_KEY
-        ports:
-            - "8000:8000"
+        # Use if should be available on host
+        #ports:
+        #    - "8000:8000"
         command: python3 -u manage.py runserver 0.0.0.0:8000
         depends_on:
             - data-iam

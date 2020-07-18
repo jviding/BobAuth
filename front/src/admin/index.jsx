@@ -18,20 +18,20 @@ class Index extends React.Component {
         super(props)
         this.state = {
             view: 'main',
-            isAuthenticated: true
+            isAuthenticated: false
         }
         this.checkSession = this.checkSession.bind(this)
     }
 
     checkSession() {
-        /*window.BobAPI.getProfile()
+        window.BobAPI.getProfile()
         .then((response) => {
             this.setState({ view: 'main', isAuthenticated: true, isAdmin: !!response.isAdmin })
         })
         .catch((e) => {
             console.warn(e)
             this.setState({ view: 'main', isAuthenticated: false, isAdmin: false })
-        })*/
+        })
     }
 
     componentDidMount() {
