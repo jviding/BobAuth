@@ -58,7 +58,7 @@ export default class Profile extends React.Component {
     }
 
     componentDidMount() {
-        /*window.BobAPI.getProfile()
+        window.BobAPI.getProfile()
         .then((response) => {
             this.setState({
                 username: response.username,
@@ -66,7 +66,7 @@ export default class Profile extends React.Component {
                 newEmail: response.email
             })
         })
-        .catch((e) => console.warn(e))*/
+        .catch((e) => console.warn(e))
     }
 
     render() {

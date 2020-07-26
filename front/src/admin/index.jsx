@@ -26,11 +26,11 @@ class Index extends React.Component {
     checkSession() {
         window.BobAPI.getProfile()
         .then((response) => {
-            this.setState({ view: 'main', isAuthenticated: true, isAdmin: !!response.isAdmin })
+            this.setState({ view: 'main', isAuthenticated: true })
         })
         .catch((e) => {
             console.warn(e)
-            this.setState({ view: 'main', isAuthenticated: false, isAdmin: false })
+            this.setState({ view: 'main', isAuthenticated: false })
         })
     }
 

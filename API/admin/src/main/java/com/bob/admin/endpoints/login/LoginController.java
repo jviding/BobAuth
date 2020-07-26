@@ -1,6 +1,14 @@
 package com.bob.admin.endpoints.login;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.bob.admin.lib.http.Request;
+import com.bob.admin.lib.http.RequestService;
+import com.bob.admin.lib.http.Response;
+
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -12,35 +20,22 @@ public class LoginController {
         consumes = "application/json",
         produces = "application/json"
     )
-    public String login(@RequestBody LoginRequestBody login) {
+    public String login(
+        @RequestBody LoginJson login, 
+        @CookieValue(name = "sessionid", defaultValue = "") String cookie,
+        HttpServletResponse response
+    ) {
 
-        System.out.println(login.username);
-        System.out.println(login.password);
+        Request req = new Request("POST", "iam", "login", cookie);
 
-        return "Logged in!";
+        req.addBodyParams("username", login.username);
+        req.addBodyParams("password", login.password);
+
+        Response res = RequestService.send(req);
+
+        response.setStatus(res.getResponseCode());
+        response.addHeader("Set-Cookie", res.getSetCookieHeader());
+
+        return "{}";
     }
-
 }
-
-/*
-const REQ_OPTIONS = {
-        method: 'POST',
-        host: 'iam',
-        endpoint: 'login',
-        urlParams: false,
-        payload: {
-            username: req.body.username,
-            password: req.body.password
-        }
-    }
-
-    return sendRequest(req, REQ_OPTIONS)
-        .then((res) => {
-            if (res.statusCode === 200) {
-                const COOKIES = res.headers['set-cookie']
-                return Promise.resolve(COOKIES)
-            } else {
-                return Promise.reject()
-            }
-        })
-*/

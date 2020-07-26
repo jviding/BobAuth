@@ -12,9 +12,9 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
-        /*window.BobAPI.getProfile()
+        window.BobAPI.getProfile()
         .then((response) => { this.setState({ username: response.username }) })
-        .catch((e) => { console.warn(e) })*/
+        .catch((e) => { console.warn(e) })
     }
 
     render() {

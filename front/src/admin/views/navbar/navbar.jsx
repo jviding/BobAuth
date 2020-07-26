@@ -10,9 +10,9 @@ export default class Navbar extends React.Component {
     }
 
     logout() {
-        /*window.BobAPI.logout()
+        window.BobAPI.logout()
         .then(() => this.props.wasLoggedOut())
-        .catch((e) => console.warn(e))*/
+        .catch((e) => console.warn(e))
     }
 
     render() {

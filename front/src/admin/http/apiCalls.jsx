@@ -12,59 +12,64 @@ export default class BobAPI {
         this.logout = this.logout.bind(this)
         this.getProfile = this.getProfile.bind(this)
         this.updateProfile = this.updateProfile.bind(this)
+
+        this.getUsers = this.getUsers.bind(this)
     }
 
     login(username, password) {
-        return new Promise((resolve, reject) => {
-            const BODY = { username: username, password: password }
-            this.Requests.POST(this.URLs.login, BODY)
+        const BODY = { username: username, password: password }
+        return this.Requests.POST(this.URLs.login, BODY)
             .then((response) => {
                 if (response.status === 200) {
-                    resolve(true)
+                    return Promise.resolve(true)
                 } else {
-                    reject('Login failed!')
+                    return Promise.reject('Login failed!')
                 }
             })
-        })
     }
 
     logout() {
-        return new Promise((resolve, reject) => {
-            this.Requests.POST(this.URLs.logout, {})
+        return this.Requests.POST(this.URLs.logout, {})
             .then((response) => {
                 if (response.status === 200) {
-                    resolve(true)
+                    return Promise.resolve(true)
                 } else {
-                    reject('Logout failed!')
+                    return Promise.reject('Logout failed!')
                 }
             })
-        })
     }
 
     getProfile() {
-        return new Promise((resolve, reject) => {
-            this.Requests.GET(this.URLs.profile)
+        return this.Requests.GET(this.URLs.profile)
             .then((response) => {
                 if (response.status === 200) {
-                    resolve(JSON.parse(response.response))
+                    return Promise.resolve(JSON.parse(response.response))
                 } else {
-                    reject('Failed to load profile!')
+                    return Promise.reject('Failed to load profile!')
                 }
             })
-        })
     }
 
     updateProfile(newEmail, newPassword, password) {
-        return new Promise((resolve, reject) => {
-            const BODY = { newEmail: newEmail, newPassword: newPassword, password: password }
-            this.Requests.PUT(this.URLs.profile, BODY)
+        const BODY = { newEmail: newEmail, newPassword: newPassword, password: password }
+        return this.Requests.PUT(this.URLs.profile, BODY)
             .then((response) => {
                 if (response.status === 200) {
-                    resolve(JSON.parse(response.response))
+                    return Promise.resolve(JSON.parse(response.response))
                 } else {
-                    reject('Failed to update profile!')
+                    return Promise.reject('Failed to update profile!')
                 }
             })
-        })
+    }
+
+    getUsers() {
+        return this.Requests.GET(this.URLs.users)
+            .then((response) => {
+                if (response.status === 200) {
+                    return Promise.resolve(JSON.parse(response.response))
+                } else {
+                    return Promise.reject('Failed to update profile!')
+                }
+            })
     }
 }

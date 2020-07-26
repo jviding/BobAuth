@@ -8,6 +8,8 @@ export default class Urls {
         this.login = BASE_URL + '/login'
         this.logout = BASE_URL + '/logout'
         this.profile = BASE_URL + '/profile'
+
+        this.users = BASE_URL + '/users'
     }
 
 }

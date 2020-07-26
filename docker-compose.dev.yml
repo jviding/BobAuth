@@ -1,9 +1,19 @@
 version: '3.7'
 services:
 
-    # api-admin:
-    # ports:
-    # - "7000:7000"
+    api-admin:
+        build:
+            context: ./API/admin
+            dockerfile: dev.Dockerfile
+        restart: always
+        volumes:
+            - ./API/admin:/admin
+        command: ./mvnw spring-boot:run
+        ports:
+            - "7000:7000"
+        depends_on:
+            - api-games
+            - api-iam
 
     api-games:
         build:
