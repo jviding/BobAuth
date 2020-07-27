@@ -3,6 +3,7 @@ from .endpoints import login
 from .endpoints import logout
 from .endpoints.profile import profile
 from .endpoints import signup
+from .endpoints.users import readAll, user
 
 urlpatterns = [
     path('login', login.login),
@@ -10,11 +11,9 @@ urlpatterns = [
     path('profile', profile.profile),
     path('signup', signup.signup),
 
-    # me
+    path('users', readAll.readAllUsers),
+    path('user', user.user)
 
-    # getUsers
-    # getUser
-    # editUser
-    # removeUser
+    # games
 
 ]

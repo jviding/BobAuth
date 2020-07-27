@@ -68,7 +68,7 @@ export default class BobAPI {
                 if (response.status === 200) {
                     return Promise.resolve(JSON.parse(response.response))
                 } else {
-                    return Promise.reject('Failed to update profile!')
+                    return Promise.reject('Failed to read users!')
                 }
             })
     }

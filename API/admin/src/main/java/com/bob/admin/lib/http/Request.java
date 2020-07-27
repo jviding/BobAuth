@@ -39,7 +39,7 @@ public class Request {
             case "games":
                 return "api-games";
             default:
-                return "";
+                return "unknownHost";
         }
     }
 
@@ -51,8 +51,10 @@ public class Request {
                 return "/logout";
             case "profile":
                 return "/profile";
+            case "users":
+                return "/users";
             default:
-                return "";
+                return "unknownPath";
         }
     }
 

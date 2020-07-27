@@ -9,7 +9,9 @@ export default class Urls {
         this.logout = BASE_URL + '/logout'
         this.profile = BASE_URL + '/profile'
 
+        this.user = BASE_URL + '/user'
         this.users = BASE_URL + '/users'
+        this.games = BASE_URL + '/games'
     }
 
 }
