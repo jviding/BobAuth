@@ -53,6 +53,8 @@ public class Request {
                 return "/profile";
             case "users":
                 return "/users";
+            case "user":
+                return "/user";
             default:
                 return "unknownPath";
         }
@@ -95,6 +97,16 @@ public class Request {
 
     @SuppressWarnings("unchecked")
     public void addBodyParams(String key, String value) {
+        this.requestBody.put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addBodyParams(String key, int value) {
+        this.requestBody.put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addBodyParams(String key, boolean value) {
         this.requestBody.put(key, value);
     }
 

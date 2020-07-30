@@ -14,10 +14,11 @@ export default class Requests {
         return new Promise((resolve, reject) => {
             var req = new XMLHttpRequest()
             req.onload = () => {
-                resolve({
-                    status: req.status,
-                    response: req.responseText
-                })
+                if (req.status === 200) {
+                    resolve(JSON.parse(req.responseText))
+                } else {
+                    reject(req.responseText)
+                }
             }
             req.onerror = () => {
                 reject("Request failed due to a network failure!")

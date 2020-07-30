@@ -24,13 +24,8 @@ def updateProfile(request):
             if newPassword:
                 auth.login(request, request.user)
 
-            return JsonResponse({
-                "userID": request.user.id,
-                "username": request.user.username,
-                "email": request.user.email,
-                "isAdmin": request.user.is_superuser
-            })
+            return JsonResponse({})
         else:
-            return HttpResponseForbidden("Forbidden")
+            return HttpResponseForbidden("Incorrect password")
     else:
-        return HttpResponseForbidden("Forbidden")
+        return HttpResponseForbidden("Not authorized")

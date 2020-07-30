@@ -19,7 +19,8 @@ export default class Profile extends React.Component {
             errorMessage: ''
         }
         this.onChangeHandler = this.onChangeHandler.bind(this)
-        this.submit = this.submit.bind(this)
+        this.updateProfile = this.updateProfile.bind(this)
+        this.loadProfile = this.loadProfile.bind(this)
     }
 
     onChangeHandler(key, value) {
@@ -30,24 +31,24 @@ export default class Profile extends React.Component {
         })
     }
 
-    submit() {
-        // TODO: Show server errors with errorMessage
+    updateProfile() {
         const HAS_EMAIL = !!this.state.newEmail
         const VALID_NEW_PASSWORD = !this.state.newPasswordFirst || this.state.newPasswordFirst === this.state.newPasswordSecond
         const HAS_PASSWORD = !!this.state.password
 
         if (HAS_PASSWORD && HAS_EMAIL && VALID_NEW_PASSWORD) {
             window.BobAPI.updateProfile(this.state.newEmail, this.state.newPasswordFirst, this.state.password)
-            .then((response) => this.setState({
-                editing: false,
-                email: response.email,
-                newEmail: response.email,
-                password: '',
-                newPasswordFirst: '',
-                newPasswordSecond: '',
-                errorMessage: ''
-            }))
-            .catch((e) => console.warn(e))
+            .then(() => {
+                this.setState({
+                    editing: false,
+                    password: '',
+                    newPasswordFirst: '',
+                    newPasswordSecond: '',
+                    errorMessage: ''
+                })
+                this.loadProfile()
+            })
+            .catch((e) => this.setState({ errorMessage: e }))
         } else if (!HAS_EMAIL) {
             this.setState({ errorMessage: 'Email can not be empty!'})
         } else if (!VALID_NEW_PASSWORD) {
@@ -57,16 +58,20 @@ export default class Profile extends React.Component {
         }
     }
 
-    componentDidMount() {
+    loadProfile() {
         window.BobAPI.getProfile()
-        .then((response) => {
+        .then((response) =>
             this.setState({
                 username: response.username,
                 email: response.email,
                 newEmail: response.email
             })
-        })
-        .catch((e) => console.warn(e))
+        )
+        .catch(console.error)
+    }
+
+    componentDidMount() {
+        this.loadProfile()
     }
 
     render() {
@@ -135,7 +140,7 @@ export default class Profile extends React.Component {
                                 <td className={`${styles.cell} ${styles.right}`}>
                                     <div
                                         className={buttonStyles.btn}
-                                        onClick={() => this.submit()}>
+                                        onClick={() => this.updateProfile()}>
                                         Submit
                                     </div>
                                 </td>

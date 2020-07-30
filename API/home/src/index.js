@@ -32,7 +32,7 @@ app.post('/login', (req, res) => {
     (require('./endpoints/login.js'))(req)
     .then((cookies) => {
         res.set({ 'set-cookie': cookies })
-        res.sendStatus(200).end()
+        res.status(200).json({})
     })
     .catch(() => res.sendStatus(404).end())
 })
@@ -41,7 +41,7 @@ app.post('/logout', (req, res) => {
     (require('./endpoints/logout.js'))(req)
     .then((cookies) => {
         res.set({ 'set-cookie': cookies })
-        res.sendStatus(200).end()
+        res.status(200).json({})
     })
     .catch(() => res.sendStatus(404).end())
 })
@@ -65,7 +65,7 @@ app.post('/signup', (req, res) => {
     (require('./endpoints/signup.js'))(req)
     .then((cookies) => {
         res.set({ 'set-cookie': cookies })
-        res.sendStatus(200).end()
+        res.status(200).json({})
     })
     .catch(() => res.sendStatus(403).end())
 })

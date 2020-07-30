@@ -1,11 +1,13 @@
-table {
-    text-align: left;
-    border-collapse: collapse;
+.tableWrapper {
+    table {
+        text-align: left;
+        border-collapse: collapse;
 
-    thead {
-        th {
-            padding-right: 30px;
-            padding-bottom: 5px;
+        thead {
+            th {
+                padding-right: 30px;
+                padding-bottom: 5px;
+            }
         }
     }
 }

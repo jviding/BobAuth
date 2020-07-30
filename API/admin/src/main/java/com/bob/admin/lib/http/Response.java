@@ -3,6 +3,10 @@ package com.bob.admin.lib.http;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class Response {
     
     private int responseCode;
@@ -23,10 +27,6 @@ public class Response {
         return this.responseHeaders;
     }
 
-    public String getResponseBody() {
-        return this.responseBody;
-    }
-
     public String getSetCookieHeader() {
         final List<String> cookies;
         if (this.responseHeaders != null && (cookies = this.responseHeaders.get("Set-Cookie")) != null) {
@@ -37,6 +37,16 @@ public class Response {
             }
         }
         return "";
+    }
+
+    public String getResponseBody() {
+        return this.responseBody;
+    }
+
+    public String getResponseBodyAsJSONString() throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) parser.parse(this.responseBody);
+        return jsonObj.toJSONString();
     }
 
 }

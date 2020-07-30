@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponseNotFound
 from django.views.decorators.http import require_http_methods
 from django.contrib import auth
 import json
@@ -14,6 +14,6 @@ def login(request):
     user = auth.authenticate(username=username, password=password)
     if user is not None:
         auth.login(request, user)
-        return HttpResponse("Success")
+        return JsonResponse({})
     else:
         return HttpResponseNotFound("Failure")

@@ -9,4 +9,4 @@ def readProfile(request):
             "isAdmin": request.user.is_superuser
         })
     else:
-        return HttpResponseForbidden("Forbidden")
+        return HttpResponseForbidden("Not authorized")

@@ -2,7 +2,7 @@ package com.bob.admin.endpoints.profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UpdateJson {
+public class PutProfile {
     @JsonProperty("newEmail")
     public String newEmail;
     @JsonProperty("newPassword")

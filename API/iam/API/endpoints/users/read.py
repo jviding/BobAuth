@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib.auth.models import User
 
-def readAllUsers(request):
+def read(request):
     if request.user.is_authenticated:
 
         result = { "users": [] }
@@ -17,4 +17,4 @@ def readAllUsers(request):
         return JsonResponse(result)
 
     else:
-        return HttpResponseForbidden("Forbidden")
+        return HttpResponseForbidden("Not authorized")

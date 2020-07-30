@@ -1,4 +1,4 @@
-package com.bob.admin.endpoints.profile;
+package com.bob.admin.endpoints.user;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,23 +9,30 @@ import com.bob.admin.lib.http.RequestService;
 import com.bob.admin.lib.http.Response;
 
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-public class ProfileController {
-    
-    @GetMapping(
-        value = "/profile", 
+public class UserController {
+
+    @PutMapping(
+        value = "/user",
+        consumes = "application/json", 
         produces = "application/json"
     )
-    public String getProfile(
+    public String updateUser(
+        @RequestBody PutUser put, 
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
 
-        Request req = new Request("GET", "iam", "profile", cookie);
+        Request req = new Request("PUT", "iam", "user", cookie);
+
+        req.addBodyParams("userID", put.userID);
+        req.addBodyParams("email", put.email);
+        req.addBodyParams("isAdmin", put.isAdmin);
+
         Response res = RequestService.send(req);
 
         response.setStatus(res.getResponseCode());
@@ -41,27 +48,24 @@ public class ProfileController {
         return "{}";
     }
 
-    @PutMapping(
-        value = "/profile", 
-        consumes = "application/json",
+    @DeleteMapping(
+        value = "/user",
+        consumes = "application/json", 
         produces = "application/json"
     )
-    public String updateProfile(
-        @RequestBody PutProfile put, 
+    public String deleteUser(
+        @RequestBody DeleteUser delete, 
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
+        
+        Request req = new Request("DELETE", "iam", "user", cookie);
 
-        Request req = new Request("PUT", "iam", "profile", cookie);
-
-        req.addBodyParams("newEmail", put.newEmail);
-        req.addBodyParams("newPassword", put.newPassword);
-        req.addBodyParams("password", put.password);
+        req.addBodyParams("userID", delete.userID);
 
         Response res = RequestService.send(req);
 
         response.setStatus(res.getResponseCode());
-        response.addHeader("Set-Cookie", res.getSetCookieHeader());
 
         if (res.getResponseCode() == 200) {
             try {

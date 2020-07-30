@@ -3,8 +3,6 @@ package com.bob.admin.endpoints.users;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletResponse;
 
 import com.bob.admin.lib.http.Request;
@@ -13,11 +11,8 @@ import com.bob.admin.lib.http.Response;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 public class UsersController {
@@ -48,14 +43,4 @@ public class UsersController {
 
         return "{}";
     }
-
-    // promoteUser -> at updateUser
-    // demoteUser  -> at updateUser
-
-    // createUser   POST    path = /user
-    // readUser     GET     path = /user/{id}
-    // readUsers    GET     path = /users
-    // updateUser   PUT     path = /user/{id}
-    // deleteUser   DELETE  path = /user/{id}
-
 }
