@@ -1,0 +1,16 @@
+.tableWrapper {
+    table {
+        text-align: left;
+        border-collapse: collapse;
+    }
+
+    .title {
+        padding-top: 20px;
+        padding-bottom: 5px;
+        font-size: 150%;
+    }
+
+    .errorMessage {
+        color: red;
+    }
+}

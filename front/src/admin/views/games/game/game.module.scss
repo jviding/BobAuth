@@ -1,0 +1,114 @@
+.tbody {
+
+    .edit {
+        display: inline-block;
+        cursor: pointer;
+    }
+    .edit:hover {
+        text-decoration: underline;
+    }
+    .submit {
+        @extend .edit;
+    }
+    .delete {
+        @extend .edit;
+    }
+}
+.tbody:hover {
+    background: #d9d9d9;
+
+    .edit {
+        color: red;
+    }
+    .submit {
+        color: blue;
+    }
+    .delete {
+        color: #b30000;
+    }
+}
+
+.tbodyClosed {
+    @extend .tbody;
+
+    td {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    td:first-child {
+        padding-left: 10px;
+    }
+    td:last-child {
+        text-align: center;
+    }
+}
+
+.tbodyOpen {
+    @extend .tbody;
+    text-align: center;
+
+    table {
+        text-align: center;
+        margin-bottom: 15px;
+
+        thead th, thead td {
+            padding-top: 10px;
+        }
+        tbody th, tbody td {
+            padding-top: 5px;
+        }
+
+        th:first-child {
+            text-align: left;
+            padding-left: 10px;
+        }
+        td:first-child {
+            padding-left: 20px;
+        }
+
+        th:last-child, td:last-child {
+            padding-right: 10px;
+        }
+    }
+
+    .wide {
+        width: 100%;
+    }
+    .textLeft {
+        text-align: left;
+        padding-left: 5px;
+    }
+
+    .btn {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .red {
+        color: red;
+    }
+    .green {
+        color: green;
+    }
+
+    .confirm {
+        display: inline-block;
+        width: 100%;
+
+        div {
+            display: inline-block;
+        }
+        div:first-child {
+            margin-right: 20px;
+        }
+        div:last-child {
+            margin-left: 20px;
+        }
+    }
+
+    .eMsg {
+        padding-top: 10px;
+    }
+}
