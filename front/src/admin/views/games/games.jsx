@@ -10,42 +10,32 @@ export default class Games extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            games: [{
-                id: '1',
-                name: 'Bob1',
-                mainFile: '',
-                resourceFiles: []
-            }, {
-                id: '2',
-                name: 'Bob2',
-                mainFile: 'bobgame2.html',
-                resourceFiles: [ 'res1.js', 'res1.js', 'res1.js' ]
-            }, {
-                id: '3',
-                name: 'Bob3',
-                mainFile: 'bobgame3.html',
-                resourceFiles: [ 'res1.js', 'res1.js', 'res1.js' ]
-            }],
+            games: [],
             gameName: '',
             error: ''
         }
         this.createGame = this.createGame.bind(this)
+        this.loadGames = this.loadGames.bind(this)
     }
 
     createGame() {
         if (!!this.state.gameName) {
             window.BobAPI.createGame(this.state.gameName)
-            .then(() => console.log('Created!'))
+            .then(() => this.loadGames())
             .catch((e) => this.setState({ error: e }))
         } else {
             this.setState({ error: 'Name cannot be empty!'})
         }
     }
 
-    componentDidMount() {
+    loadGames() {
         window.BobAPI.getGames()
-        .then((response) => { this.setState({ games: response.games }) })
+        .then((games) => this.setState({ games: games }))
         .catch((e) => { console.warn(e) })
+    }
+
+    componentDidMount() {
+        this.loadGames()
     }
 
     render() {

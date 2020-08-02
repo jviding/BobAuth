@@ -22,28 +22,31 @@ public class Request {
      * @param endpoint  -> login | logout | ...
      * @param sessionCookie
      */
-    public Request(String method, String host, String endpoint, String sessionCookie) {
+    public Request(String method, String host, String endpoint, String sessionCookie) throws Exception {
+        this(method, host, endpoint);
+        this.sessionCookie = sessionCookie;
+    }
+    public Request(String method, String host, String endpoint) throws Exception {
         this.method = method;
         this.url = "http://" + this.getHostname(host) + ":" + this.getPort(host) + this.getPath(endpoint);
-        this.sessionCookie = sessionCookie;
         this.queryParams = "";
         this.requestBody = new JSONObject();
     }
 
     // PRIVATE
 
-    private String getHostname(String host) {
+    private String getHostname(String host) throws Exception {
         switch(host) {
             case "iam":
                 return "api-iam";
             case "games":
                 return "api-games";
             default:
-                return "unknownHost";
+                throw new Exception("Unknown host.");
         }
     }
 
-    private String getPath(String endpoint) {
+    private String getPath(String endpoint) throws Exception {
         switch(endpoint) {
             case "login":
                 return "/login";
@@ -55,19 +58,25 @@ public class Request {
                 return "/users";
             case "user":
                 return "/user";
+            case "game":
+                return "/game";
+            case "gameFile":
+                return "/game/file";
+            case "games":
+                return "/games";
             default:
-                return "unknownPath";
+                throw new Exception("Unknown path.");
         }
     }
 
-    private String getPort(String host) {
+    private String getPort(String host) throws Exception {
         switch(host) {
             case "iam":
                 return "8000";
             case "games":
                 return "9000";
             default:
-                return "0";
+                throw new Exception("Unknown host.");
         }
     }
 
@@ -81,8 +90,12 @@ public class Request {
         return new URL(this.url + this.queryParams);
     }
 
-    public String getSessionCookie() {
-        return this.sessionCookie;
+    public String getSessionCookie() throws Exception {
+        if (this.sessionCookie != null) {
+            return this.sessionCookie;
+        } else {
+            throw new Exception("No session cookie found!");
+        }
     }
 
     public void addQueryParams(String key, String value) throws UnsupportedEncodingException {

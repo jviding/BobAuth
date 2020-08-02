@@ -45,6 +45,12 @@ export default class User extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.userCount !== this.props.userCount) {
+            this.setState({ isEditing: false })
+        }
+    }
+
     render() {
         if (!this.state.isEditing) {
             return (

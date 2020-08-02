@@ -3,8 +3,18 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET     /load                       controllers.GameController.load(userID: String ?= "", gameName: String ?= "")
-PUT     /save                       controllers.GameController.save(userID: String, gameName: String)
+GET     /load                       controllers.PlayerController.load(userID: String ?= "", gameName: String ?= "")
+PUT     /save                       controllers.PlayerController.save(userID: String ?= "", gameName: String ?= "")
+
+GET     /games                      controllers.GamesController.getGames()
+POST    /game                       controllers.GameController.createGame()
+# PUT
+DELETE  /game                       controllers.GameController.deleteGame()
+
+# Create
+# Read
+# Update
+# Delete
 
 # TODO: Remove safely all static contents
 # Map static resources from the /public folder to the /assets URL path

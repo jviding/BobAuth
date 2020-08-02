@@ -22,12 +22,18 @@ public class LogoutController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
+        try {
 
-        Request req = new Request("POST", "iam", "logout", cookie);
-        Response res = RequestService.send(req);
+            Request req = new Request("POST", "iam", "logout", cookie);
+            Response res = RequestService.send(req);
 
-        response.setStatus(res.getResponseCode());
-        response.addHeader("Set-Cookie", res.getSetCookieHeader());
+            response.setStatus(res.getResponseCode());
+        
+            response.addHeader("Set-Cookie", res.getSetCookieHeader());
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
         return "{}";
     }

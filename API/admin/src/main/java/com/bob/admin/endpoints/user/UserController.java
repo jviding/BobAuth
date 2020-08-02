@@ -26,23 +26,24 @@ public class UserController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
+        try {
 
-        Request req = new Request("PUT", "iam", "user", cookie);
+            Request req = new Request("PUT", "iam", "user", cookie);
 
-        req.addBodyParams("userID", put.userID);
-        req.addBodyParams("email", put.email);
-        req.addBodyParams("isAdmin", put.isAdmin);
+            req.addBodyParams("userID", put.userID);
+            req.addBodyParams("email", put.email);
+            req.addBodyParams("isAdmin", put.isAdmin);
 
-        Response res = RequestService.send(req);
+            Response res = RequestService.send(req);
 
-        response.setStatus(res.getResponseCode());
+            response.setStatus(res.getResponseCode());
 
-        if (res.getResponseCode() == 200) {
-            try {
-                return res.getResponseBodyAsJSONString();
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+            if (res.getResponseCode() == 200) {
+                return res.getResponseBody();
+            } 
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         return "{}";
@@ -58,21 +59,22 @@ public class UserController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        
-        Request req = new Request("DELETE", "iam", "user", cookie);
+        try {
 
-        req.addBodyParams("userID", delete.userID);
+            Request req = new Request("DELETE", "iam", "user", cookie);
 
-        Response res = RequestService.send(req);
+            req.addBodyParams("userID", delete.userID);
 
-        response.setStatus(res.getResponseCode());
+            Response res = RequestService.send(req);
 
-        if (res.getResponseCode() == 200) {
-            try {
-                return res.getResponseBodyAsJSONString();
-            } catch (Exception e) {
-                System.out.println(e);
+            response.setStatus(res.getResponseCode());
+
+            if (res.getResponseCode() == 200) {
+                return res.getResponseBody();
             }
+            
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         return "{}";

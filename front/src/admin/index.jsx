@@ -17,7 +17,7 @@ class Index extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            view: 'games',
+            view: '',
             isAuthenticated: false
         }
         this.checkSession = this.checkSession.bind(this)
@@ -26,14 +26,14 @@ class Index extends React.Component {
     checkSession() {
         console.warn("TODO: index.js uncomment checkSession()")
         console.warn("TODO: If user is removed, leaves next block open?")
-        /*window.BobAPI.getProfile()
+        window.BobAPI.getProfile()
         .then((response) => {
             this.setState({ view: 'main', isAuthenticated: true })
         })
         .catch((e) => {
             console.warn(e)
             this.setState({ view: 'main', isAuthenticated: false })
-        })*/
+        })
     }
 
     componentDidMount() {

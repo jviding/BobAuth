@@ -9,8 +9,6 @@ import com.bob.admin.lib.http.Request;
 import com.bob.admin.lib.http.RequestService;
 import com.bob.admin.lib.http.Response;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.web.bind.annotation.CookieValue;
 
 
@@ -25,20 +23,19 @@ public class UsersController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
+        try {
 
-        Request req = new Request("GET", "iam", "users", cookie);
-        Response res = RequestService.send(req);
+            Request req = new Request("GET", "iam", "users", cookie);
+            Response res = RequestService.send(req);
 
-        response.setStatus(res.getResponseCode());
+            response.setStatus(res.getResponseCode());
 
-        if (res.getResponseCode() == 200) {
-            try {
-                JSONParser parser = new JSONParser();
-                JSONObject resJson = (JSONObject) parser.parse(res.getResponseBody());
-                return resJson.toJSONString();   
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+            if (res.getResponseCode() == 200) {
+                return res.getResponseBody();
+            } 
+            
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         return "{}";

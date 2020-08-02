@@ -24,18 +24,19 @@ public class ProfileController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
+        try {
 
-        Request req = new Request("GET", "iam", "profile", cookie);
-        Response res = RequestService.send(req);
+            Request req = new Request("GET", "iam", "profile", cookie);
+            Response res = RequestService.send(req);
 
-        response.setStatus(res.getResponseCode());
+            response.setStatus(res.getResponseCode());
 
-        if (res.getResponseCode() == 200) {
-            try {
-                return res.getResponseBodyAsJSONString();
-            } catch (Exception e) {
-                System.out.println(e);
+            if (res.getResponseCode() == 200) {
+                return res.getResponseBody();
             }
+            
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         return "{}";
@@ -51,24 +52,26 @@ public class ProfileController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
+        try {
 
-        Request req = new Request("PUT", "iam", "profile", cookie);
+            Request req = new Request("PUT", "iam", "profile", cookie);
 
-        req.addBodyParams("newEmail", put.newEmail);
-        req.addBodyParams("newPassword", put.newPassword);
-        req.addBodyParams("password", put.password);
+            req.addBodyParams("newEmail", put.newEmail);
+            req.addBodyParams("newPassword", put.newPassword);
+            req.addBodyParams("password", put.password);
 
-        Response res = RequestService.send(req);
+            Response res = RequestService.send(req);
 
-        response.setStatus(res.getResponseCode());
-        response.addHeader("Set-Cookie", res.getSetCookieHeader());
+            response.setStatus(res.getResponseCode());
 
-        if (res.getResponseCode() == 200) {
-            try {
-                return res.getResponseBodyAsJSONString();
-            } catch (Exception e) {
-                System.out.println(e);
+            response.addHeader("Set-Cookie", res.getSetCookieHeader());
+
+            if (res.getResponseCode() == 200) {
+                return res.getResponseBody();
             }
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         return "{}";

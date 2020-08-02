@@ -16,9 +16,12 @@ import play.modules.reactivemongo.{
 
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
+import reactivemongo.api.Cursor
 import reactivemongo.api.ReadPreference
 import reactivemongo.play.json._
+import reactivemongo.api.commands.WriteResult
 
+import scala.util.Try
 
 class GameController @Inject() (
     controllerComponents: ControllerComponents,
@@ -29,56 +32,60 @@ class GameController @Inject() (
 
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
-    def load(userID: String, gameName: String) = Action.async {
+    def createGame() = Action.async(parse.json) { request: Request[JsValue] =>
+        
+        val gameName: String = (request.body.as[JsObject] \ "gameName").validate[String].getOrElse("Undefined")
 
-        val selector = BSONDocument("userID" -> userID, "gameName" -> gameName)
-        val projection = BSONDocument("_id" -> 0, "gameState" -> 1)
-
-        val gameOption: Future[Option[JsObject]] = gamesCollection.flatMap(
-            _.find(selector, projection).one[JsObject](ReadPreference.primary)
+        val gameSelector = BSONDocument("name" -> gameName)
+        val gamesWithGivenName: Future[Option[BSONDocument]] = gamesCollection.flatMap(
+            _.find(gameSelector).one[BSONDocument]
         )
 
-        val gameStateOption: Future[Any] = gameOption.map {
-            case Some(game) => game \ "gameState"
-            case None => None
-        }
+        val newGame = BSONDocument(
+            "name" -> gameName, 
+            "mainFile" -> "",
+            "resourceFiles" -> BSONArray()
+        )
+        def insertNewGame(newGame: BSONDocument): Future[Boolean] = gamesCollection.flatMap(
+            _.insert.one(newGame).map(_.ok)
+        )
 
-        gameStateOption.map {
-            case JsDefined(gameState) => Ok(gameState)
-            case undefined: JsUndefined => NotFound
-            case None => NotFound
+        gamesWithGivenName.flatMap {
+            case Some(game) => Future { Conflict("Game with the given name already exists") }
+            case None => insertNewGame(newGame).map {
+                case true => Ok("")
+                case false => InternalServerError("Something went wrong")
+            }
         }
     }
 
-    def save(userID: String, gameName: String) = Action.async(parse.json) { request: Request[JsValue] =>
+    //def update(userID: String, gameName: String)
 
-        val gameState: JsObject = request.body.as[JsObject]
+    def deleteGame() = Action.async(parse.json) { request: Request[JsValue] =>
 
-        val selector = BSONDocument("userID" -> userID, "gameName" -> gameName)
-        val update = BSONDocument("$set" -> BSONDocument("gameState" -> gameState))
-        val projection: Option[BSONDocument] = Some(BSONDocument("_id" -> 0, "gameState" -> 1))
+        val gameID: String = (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
 
-        val gameOption: Future[Option[JsObject]] = gamesCollection.flatMap(
-            _.findAndUpdate(
-                selector,
-                update,
-                fetchNewObject = true,
-                upsert = true,
-                fields = projection
-            )
-            .map(_.result[JsObject])
+        val id: Try[BSONObjectID] = BSONObjectID.parse(gameID)
+
+        println("ID:" + gameID)
+        println(BSONObjectID.parse(gameID))
+
+        val gameSelector = BSONDocument("_id" -> id.get)
+        val removed: Future[List[JsObject]] = gamesCollection.flatMap(
+            _.find(gameSelector)
+            .cursor[JsObject](ReadPreference.primary)
+            .collect[List](1, Cursor.FailOnError[List[JsObject]]())
         )
 
-        val gameStateOption: Future[Any] = gameOption.map {
-            case Some(game) => game \ "gameState"
-            case None => None
+        removed.map { g =>
+            println("FOUND:")
+            println(g)
+            g.map(println(_))
         }
 
-        gameStateOption.map {
-            case JsDefined(gameState) => Ok(gameState)
-            case undefined: JsUndefined => NotFound
-            case None => NotFound
-        }
-     }
+        //removed.map(println(_))
+
+        Future.successful(Ok("hello world"))
+    }
 
 }

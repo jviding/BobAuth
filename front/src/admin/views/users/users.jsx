@@ -34,7 +34,7 @@ export default class Users extends React.Component {
     render() {
 
         const USERS = this.state.users.map((user, key) => {
-            return(<User key={key} user={user} reload={this.loadUsers} />)
+            return(<User key={key} user={user} reload={this.loadUsers} userCount={this.state.users.length} />)
         })
 
         return (

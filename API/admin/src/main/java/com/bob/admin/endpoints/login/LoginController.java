@@ -25,17 +25,23 @@ public class LoginController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
+        try {
 
-        Request req = new Request("POST", "iam", "login", cookie);
+            Request req = new Request("POST", "iam", "login", cookie);
 
-        req.addBodyParams("username", login.username);
-        req.addBodyParams("password", login.password);
+            req.addBodyParams("username", login.username);
+            req.addBodyParams("password", login.password);
 
-        Response res = RequestService.send(req);
+            Response res = RequestService.send(req);
 
-        response.setStatus(res.getResponseCode());
-        response.addHeader("Set-Cookie", res.getSetCookieHeader());
+            response.setStatus(res.getResponseCode());
 
+            response.addHeader("Set-Cookie", res.getSetCookieHeader());
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
         return "{}";
     }
 }
