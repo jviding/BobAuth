@@ -21,7 +21,7 @@ import reactivemongo.api.ReadPreference
 import reactivemongo.play.json._
 import reactivemongo.api.commands.WriteResult
 
-import scala.util.Try
+import scala.util.{ Try, Success, Failure }
 
 class GameController @Inject() (
     controllerComponents: ControllerComponents,
@@ -34,58 +34,63 @@ class GameController @Inject() (
 
     def createGame() = Action.async(parse.json) { request: Request[JsValue] =>
         
-        val gameName: String = (request.body.as[JsObject] \ "gameName").validate[String].getOrElse("Undefined")
+        val gameName: String = (request.body.as[JsObject] \ "gameName").validate[String].getOrElse("")
 
-        val gameSelector = BSONDocument("name" -> gameName)
-        val gamesWithGivenName: Future[Option[BSONDocument]] = gamesCollection.flatMap(
-            _.find(gameSelector).one[BSONDocument]
-        )
+        def isNameFree(gameName: String): Future[Boolean] = {
+            val gameSelector = BSONDocument("name" -> gameName)
+            gamesCollection.flatMap(
+                _.find(gameSelector).one[BSONDocument].map {
+                    case Some(game) => false
+                    case None => true
+                }
+            )
+        }
 
-        val newGame = BSONDocument(
-            "name" -> gameName, 
-            "mainFile" -> "",
-            "resourceFiles" -> BSONArray()
-        )
-        def insertNewGame(newGame: BSONDocument): Future[Boolean] = gamesCollection.flatMap(
-            _.insert.one(newGame).map(_.ok)
-        )
+        def create(gameName: String): Future[Int] = {
+            val newGame = BSONDocument(
+                "name" -> gameName, 
+                "mainFile" -> "",
+                "resourceFiles" -> BSONArray()
+            )
+            gamesCollection.flatMap(
+                _.insert.one(newGame).map(_.n)
+            )
+        }
 
-        gamesWithGivenName.flatMap {
-            case Some(game) => Future { Conflict("Game with the given name already exists") }
-            case None => insertNewGame(newGame).map {
-                case true => Ok("")
-                case false => InternalServerError("Something went wrong")
+        isNameFree(gameName).flatMap {
+            case false => Future { Conflict("Game with the given name already exists") }
+            case true => create(gameName).map {
+                case x if x > 0 => Ok("")
+                case _ => InternalServerError("Something went wrong")
             }
         }
     }
 
-    //def update(userID: String, gameName: String)
+    def updateGame(gameID: String, gameName: String) {
+        // GameName
+        // New mainFile -> Handle with gameFiles
+        // Remove resourceFiles
+    }
 
     def deleteGame() = Action.async(parse.json) { request: Request[JsValue] =>
 
-        val gameID: String = (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
-
-        val id: Try[BSONObjectID] = BSONObjectID.parse(gameID)
-
-        println("ID:" + gameID)
-        println(BSONObjectID.parse(gameID))
-
-        val gameSelector = BSONDocument("_id" -> id.get)
-        val removed: Future[List[JsObject]] = gamesCollection.flatMap(
-            _.find(gameSelector)
-            .cursor[JsObject](ReadPreference.primary)
-            .collect[List](1, Cursor.FailOnError[List[JsObject]]())
+        val gameID: Try[BSONObjectID] = BSONObjectID.parse(
+            (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
         )
 
-        removed.map { g =>
-            println("FOUND:")
-            println(g)
-            g.map(println(_))
+        def delete(gameID: BSONObjectID) = {
+            val gameSelector = BSONDocument("_id" -> gameID)
+            gamesCollection.flatMap(
+                _.delete.one(gameSelector).map(_.n)
+            )
         }
 
-        //removed.map(println(_))
-
-        Future.successful(Ok("hello world"))
+        gameID match {
+            case Failure(e) =>  Future { BadRequest("Invalid gameID") }
+            case Success(gameID) => delete(gameID).map {
+                case x if x > 0 => Ok("")
+                case _ => NotFound("No games found with the given gameID")
+            }  
+        }
     }
-
 }

@@ -41,7 +41,13 @@ export default class Games extends React.Component {
     render() {
 
         const GAMES = this.state.games.map((game, index) => {
-            return <Game key={index} game={game} />
+            return (
+                <Game
+                    key={index}
+                    game={game}
+                    gameCount={this.state.games.length}
+                    deleted={this.loadGames} />
+                )
         })
 
         return (

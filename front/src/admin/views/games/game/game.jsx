@@ -48,8 +48,14 @@ export default class Game extends React.Component {
 
     deleteGame() {
         window.BobAPI.deleteGame(this.props.game.id)
-        .then(() => console.log('Deleted!'))
+        .then(() => this.props.deleted())
         .catch((e) => this.setState({ error: e }))
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.gameCount !== this.props.gameCount) {
+            this.setState({ isEditing: false })
+        }
     }
 
     render() {
