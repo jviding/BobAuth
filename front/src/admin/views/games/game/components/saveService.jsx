@@ -1,47 +1,38 @@
 export default function saveService() {
 
-    const updateGameNameIfChanged = () => {
+    const updateGameIfChanged = () => {
         const HAS_NEW_NAME = this.props.game.name !== this.state.newName
-        if (HAS_NEW_NAME) {
-            return window.BobAPI.updateGameName(this.props.game.id, this.state.newName)
+        const HAS_REMOVED_RESOURCE_FILES = this.state.removedResourceFiles.length > 0
+        if (HAS_NEW_NAME || HAS_REMOVED_RESOURCE_FILES) {
+            return window.BobAPI.updateGame(this.props.game.id, this.state.newName, this.state.removedResourceFiles)
         } else {
             return Promise.resolve(true)
         }
     }
 
-    const updateMainFileIfChanged = () => {
+    const uploadFilesIfAdded = () => {
+        let filesToUpload = []
+
         const HAS_NEW_MAIN_FILE = !!this.state.newMainFile
         if (HAS_NEW_MAIN_FILE) {
-            return window.BobAPI.uploadGameMainFile(this.props.game.id, this.state.newMainFile)
-        } else {
-            return Promise.resolve(true)
+            filesToUpload.push({ type: 'main', file: this.state.newMainFile })
         }
-    }
 
-    const deleteResourceFilesIfRemoved = () => {
-        const HAS_REMOVED_RESOURCE_FILES = this.state.removedResourceFiles.length > 0
-        if (HAS_REMOVED_RESOURCE_FILES) {
-            return window.BobAPI.deleteGameResourceFiles(this.props.game.id, this.state.removedResourceFiles)
-        } else {
-            return Promise.resolve(true)
-        }
-    }
-
-    const uploadResourceFilesIfAdded = () => {
         const HAS_NEW_RESOURCE_FILES = this.state.newResourceFiles.length > 0
         if (HAS_NEW_RESOURCE_FILES) {
-            return Promise.all(
-                this.state.newResourceFiles.map((file) =>
-                    window.BobAPI.uploadGameResourceFile(this.props.game.id, file)
-                )
+            filesToUpload = filesToUpload.concat(
+                this.state.newResourceFiles.map((file) => { return { type: 'resource', file: file }})
             )
-        } else {
-            return Promise.resolve(true)
         }
+
+        return Promise.all(filesToUpload.map(uploadFile))
     }
 
-    return updateGameNameIfChanged()
-        .then(updateMainFileIfChanged)
-        .then(deleteResourceFilesIfRemoved)
-        .then(uploadResourceFilesIfAdded)
+    const uploadFile = ({type, file}) => {
+        console.log(type)
+        console.log(file.name)
+        return Promise.resolve(true)
+    }
+
+    return updateGameIfChanged().then(uploadFilesIfAdded)
 }

@@ -15,12 +15,9 @@ export default class BobAPI {
 
         this.getGames = this.getGames.bind(this)
         this.createGame = this.createGame.bind(this)
-        this.updateGameName = this.updateGameName.bind(this)
+        this.updateGame = this.updateGame.bind(this)
         this.deleteGame = this.deleteGame.bind(this)
-
-        this.uploadGameMainFile = this.uploadGameMainFile.bind(this)
-        this.uploadGameResourceFile = this.uploadGameResourceFile.bind(this)
-        this.deleteGameResourceFiles = this.deleteGameResourceFiles.bind(this)
+        this.uploadGameFile = this.uploadGameFile.bind(this)
 
         this.getUsers = this.getUsers.bind(this)
         this.updateUser = this.updateUser.bind(this)
@@ -45,6 +42,8 @@ export default class BobAPI {
         return this.Requests.PUT(this.URLs.profile, BODY)
     }
 
+    // GAMES
+
     getGames() {
         return this.Requests.GET(this.URLs.games)
     }
@@ -54,8 +53,8 @@ export default class BobAPI {
         return this.Requests.POST(this.URLs.game, BODY)
     }
 
-    updateGameName(gameID, newGameName) {
-        const BODY = { gameID: gameID, newGameName: newGameName }
+    updateGame(gameID, newGameName, removedResourceFiles) {
+        const BODY = { gameID: gameID, newGameName: newGameName, removedResourceFiles: removedResourceFiles }
         return this.Requests.PUT(this.URLs.game, BODY)
     }
 
@@ -64,18 +63,11 @@ export default class BobAPI {
         return this.Requests.DELETE(this.URLs.game, BODY)
     }
 
-    uploadGameMainFile(gameID, newMainFile) {
+    uploadGameFile(gameID, fileType, file) {
         return Promise.reject('Uploading file not implemeted!')
     }
 
-    uploadGameResourceFile(gameID, newResourceFile) {
-        return Promise.reject('Uploading file not implemeted!')
-    }
-
-    deleteGameResourceFiles(filenames) {
-        const BODY = { filenames: filenames }
-        return this.Requests.DELETE(this.URLs.gameFile, BODY)
-    }
+    // USERS
 
     getUsers() {
         return this.Requests.GET(this.URLs.users)

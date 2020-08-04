@@ -8,7 +8,7 @@ PUT     /save                       controllers.PlayerController.save(userID: St
 
 GET     /games                      controllers.GamesController.getGames()
 POST    /game                       controllers.GameController.createGame()
-# PUT
+PUT     /game                       controllers.GameController.updateGame()
 DELETE  /game                       controllers.GameController.deleteGame()
 
 # Create

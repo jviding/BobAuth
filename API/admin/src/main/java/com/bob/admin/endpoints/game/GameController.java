@@ -7,6 +7,7 @@ import com.bob.admin.lib.http.Request;
 import com.bob.admin.lib.http.RequestService;
 import com.bob.admin.lib.http.Response;
 
+import org.json.simple.JSONArray;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -68,6 +69,7 @@ public class GameController {
                 
                 req.addBodyParams("gameID", put.gameID);
                 req.addBodyParams("newGameName", put.newGameName);
+                req.addBodyParams("removedResourceFiles", (JSONArray) put.removedResourceFiles);
 
                 Response res = RequestService.send(req);
 

@@ -36,15 +36,12 @@ class GameController @Inject() (
         
         val gameName: String = (request.body.as[JsObject] \ "gameName").validate[String].getOrElse("")
 
-        def isNameFree(gameName: String): Future[Boolean] = {
-            val gameSelector = BSONDocument("name" -> gameName)
-            gamesCollection.flatMap(
-                _.find(gameSelector).one[BSONDocument].map {
-                    case Some(game) => false
-                    case None => true
-                }
-            )
-        }
+        def isNameFree(gameName: String): Future[Boolean] = gamesCollection.flatMap(
+            _.find(BSONDocument("name" -> gameName)).one[BSONDocument].map {
+                case Some(game) => false
+                case None => true
+            }
+        )
 
         def create(gameName: String): Future[Int] = {
             val newGame = BSONDocument(
@@ -66,10 +63,92 @@ class GameController @Inject() (
         }
     }
 
-    def updateGame(gameID: String, gameName: String) {
+    def updateGame() = Action.async(parse.json) { request: Request[JsValue] =>
+
+        val gameID: Try[BSONObjectID] = BSONObjectID.parse(
+            (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
+        ) match { 
+            case Success(id) => Success(id)
+            case Failure(e) => Failure(new Exception("Invalid gameID")) 
+        }
+        
+        val newGameName: Try[String] = (request.body.as[JsObject] \ "newGameName").validate[String].getOrElse("") match {
+            case str if str.length > 0 => Success(str)
+            case _ => Failure(new Exception("New game name cannot be empty"))
+        }
+
+        val removedResourceFiles: Seq[String] =
+            (request.body.as[JsObject] \ "removedResourceFiles").validate[Seq[String]].getOrElse(Seq.empty[String])
+        
+        for {
+            gameID <- gameID
+            newGameName <- newGameName
+        } yield {
+            println("gameID:")
+            println(gameID)
+            println("newGameName:")
+            println(newGameName)
+            println("files:")
+            println(removedResourceFiles)
+
+            gamesCollection.flatMap(
+                _.find(BSONDocument("id" -> gameID)).one[JsObject](ReadPreference.primary)
+            ).map { g =>
+                println("HERE:")
+                println(g)
+            }
+
+            /*_.find(BSONDocument())
+            .cursor[JsObject](ReadPreference.primary)
+            .collect[List](-1, Cursor.FailOnError[List[JsObject]]())
+
+            gamesCollection.def isNameFree(gameName: String): Future[Boolean] = {
+            val gameSelector = BSONDocument("name" -> gameName)
+            gamesCollection.flatMap(
+                _.find(gameSelector).one[BSONDocument].map {
+                    case Some(game) => false
+                    case None => true
+                }
+            )*/
+
+        }
+
+        // Find resourceFiles and perform update
+
+        /*val gameID: Try[BSONObjectID] = BSONObjectID.parse(
+            (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
+        ) 
+        val newGameName: String = (request.body.as[JsObject] \ "gameName").validate[String].getOrElse("")
+        val deletedResourceFiles: Seq[String] = 
+            (request.body.as[JsObject] \ "removedResourceFiles").validate[Seq[String]].getOrElse(Seq.empty[String])
+*/
+        /*for {
+            gameID <- BSONObjectID.parse((request.body.as[JsObject] \ "gameID").validate[String].getOrElse(""))
+            //newGameName <- (request.body.as[JsObject] \ "gameName").validate[String]
+            //resourceFiles: JsResult[Seq[String]] = (game \ "resourceFiles").validate[Seq[String]]
+        } yield {
+            println("\n\nID:")
+            println(gameID)
+            println("name:")
+            //println(newGameName)
+            println("\n\n")
+        }*/
+
+        //println("ASDASD")
+
         // GameName
         // New mainFile -> Handle with gameFiles
         // Remove resourceFiles
+
+        /*gameID match {
+            case Failure(e) => println("Invalid gameID")
+            case Success(gameID) => newGameName match {
+                case newGameName: String if newGameName.length > 0 => 
+                case _ => 
+            }
+        }*/
+
+        Future.successful(Ok(""))
     }
 
     def deleteGame() = Action.async(parse.json) { request: Request[JsValue] =>

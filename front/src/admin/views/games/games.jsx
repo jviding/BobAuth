@@ -21,7 +21,10 @@ export default class Games extends React.Component {
     createGame() {
         if (!!this.state.gameName) {
             window.BobAPI.createGame(this.state.gameName)
-            .then(() => this.loadGames())
+            .then(() => {
+                this.setState({ gameName: '' })
+                this.loadGames()
+            })
             .catch((e) => this.setState({ error: e }))
         } else {
             this.setState({ error: 'Name cannot be empty!'})
