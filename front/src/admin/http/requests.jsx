@@ -6,42 +6,39 @@ export default class Requests {
         this.makeRequest = this.makeRequest.bind(this)
         this.GET = this.GET.bind(this)
         this.POST = this.POST.bind(this)
+        this.POSTFile = this.POSTFile.bind(this)
         this.PUT = this.PUT.bind(this)
         this.DELETE = this.DELETE.bind(this)
     }
 
-    makeRequest(method, url, body) {
+    makeRequest(method, url, body = null, isJson = true) {
         return new Promise((resolve, reject) => {
             var req = new XMLHttpRequest()
-            req.onload = () => {
-                if (req.status === 200) {
-                    resolve(JSON.parse(req.responseText))
-                } else {
-                    reject(req.responseText)
-                }
-            }
-            req.onerror = () => {
-                reject("Request failed due to a network failure!")
-            }
+            req.onerror = () => reject("Network failure")
+            req.onload = () => (req.status === 200 ? resolve(JSON.parse(req.responseText)) : reject(req.responseText))
             req.open(method, url)
-            if (['POST', 'PUT', 'DELETE'].includes(method)) {
+            if (body !== null && isJson) {
+                body = JSON.stringify(body)
                 req.setRequestHeader('Content-Type', 'application/json')
             }
-            req.send(body !== null ? JSON.stringify(body) : null)
+            req.send(body)
         })
     }
 
     GET(url, params = false) {
-        let urlParams = ''
         if (!!params) {
             // TODO: UrlParams as Base64
-            urlParams = '?' + Object.entries(params).map(([k, v]) => { return k + '=' + v }).join('&')
+            url += '?' + Object.entries(params).map(([k, v]) => { return k + '=' + v }).join('&')
         }
-        return this.makeRequest('GET', url + urlParams, null)
+        return this.makeRequest('GET', url)
     }
 
     POST(url, body) {
         return this.makeRequest('POST', url, body)
+    }
+
+    POSTFile(url, formData) {
+        return this.makeRequest('POST', url, formData, false)
     }
 
     PUT(url, body) {

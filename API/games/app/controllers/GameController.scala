@@ -47,7 +47,7 @@ class GameController @Inject() (
             val newGame = BSONDocument(
                 "name" -> gameName, 
                 "mainFile" -> "",
-                "resourceFiles" -> BSONArray()
+                "resourceFiles" -> BSONArray("a", "b", "c")
             )
             gamesCollection.flatMap(
                 _.insert.one(newGame).map(_.n)
@@ -65,6 +65,9 @@ class GameController @Inject() (
 
     def updateGame() = Action.async(parse.json) { request: Request[JsValue] =>
 
+        // TODO: REMOVE STORED RESOURCE FILES 
+        // Not only from filenames from Game object!!!
+
         val gameID: Try[BSONObjectID] = BSONObjectID.parse(
             (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
         ) match { 
@@ -79,74 +82,38 @@ class GameController @Inject() (
 
         val removedResourceFiles: Seq[String] =
             (request.body.as[JsObject] \ "removedResourceFiles").validate[Seq[String]].getOrElse(Seq.empty[String])
-        
+
         for {
             gameID <- gameID
             newGameName <- newGameName
         } yield {
-            println("gameID:")
-            println(gameID)
-            println("newGameName:")
-            println(newGameName)
-            println("files:")
-            println(removedResourceFiles)
-
             gamesCollection.flatMap(
-                _.find(BSONDocument("id" -> gameID)).one[JsObject](ReadPreference.primary)
-            ).map { g =>
-                println("HERE:")
-                println(g)
-            }
+                _.find(BSONDocument("_id" -> gameID)).one[JsObject](ReadPreference.primary)
+            ).map {
+                case Some(game) => Success((game \ "resourceFiles").validate[Seq[String]].getOrElse(Seq.empty[String]))
+                case None => Failure(new Exception("No games found with the given gameID"))
+            }.map {
+                case Success(resourceFiles) => Success(resourceFiles.filter( removedResourceFiles.indexOf(_) == -1 ))
+                case Failure(e) => Failure(e)
+            }.map {
+                case Failure(e) => Failure(e)
+                case Success(resourceFiles) => gamesCollection.flatMap {
 
-            /*_.find(BSONDocument())
-            .cursor[JsObject](ReadPreference.primary)
-            .collect[List](-1, Cursor.FailOnError[List[JsObject]]())
+                    println("ResourceFiles:")
+                    println(resourceFiles)
 
-            gamesCollection.def isNameFree(gameName: String): Future[Boolean] = {
-            val gameSelector = BSONDocument("name" -> gameName)
-            gamesCollection.flatMap(
-                _.find(gameSelector).one[BSONDocument].map {
-                    case Some(game) => false
-                    case None => true
+                    _.findAndUpdate(
+                        BSONDocument("_id" -> gameID),
+                        BSONDocument("name" -> newGameName, "resourceFiles" -> resourceFiles),
+                        fetchNewObject = true
+                    ).map(_.result[JsObject]).map {
+                        case Some(item) => println(item)
+                        case None => println("NONE")
+                    }
                 }
-            )*/
+            }
 
         }
-
-        // Find resourceFiles and perform update
-
-        /*val gameID: Try[BSONObjectID] = BSONObjectID.parse(
-            (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
-        ) 
-        val newGameName: String = (request.body.as[JsObject] \ "gameName").validate[String].getOrElse("")
-        val deletedResourceFiles: Seq[String] = 
-            (request.body.as[JsObject] \ "removedResourceFiles").validate[Seq[String]].getOrElse(Seq.empty[String])
-*/
-        /*for {
-            gameID <- BSONObjectID.parse((request.body.as[JsObject] \ "gameID").validate[String].getOrElse(""))
-            //newGameName <- (request.body.as[JsObject] \ "gameName").validate[String]
-            //resourceFiles: JsResult[Seq[String]] = (game \ "resourceFiles").validate[Seq[String]]
-        } yield {
-            println("\n\nID:")
-            println(gameID)
-            println("name:")
-            //println(newGameName)
-            println("\n\n")
-        }*/
-
-        //println("ASDASD")
-
-        // GameName
-        // New mainFile -> Handle with gameFiles
-        // Remove resourceFiles
-
-        /*gameID match {
-            case Failure(e) => println("Invalid gameID")
-            case Success(gameID) => newGameName match {
-                case newGameName: String if newGameName.length > 0 => 
-                case _ => 
-            }
-        }*/
 
         Future.successful(Ok(""))
     }

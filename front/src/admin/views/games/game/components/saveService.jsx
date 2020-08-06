@@ -25,13 +25,17 @@ export default function saveService() {
             )
         }
 
-        return Promise.all(filesToUpload.map(uploadFile))
+        return Promise.all(filesToUpload.map((fileEntry) => {
+            return new Promise((resolve, reject) => {
+                uploadFile(fileEntry).then(resolve).catch(reject)
+            })
+        }))
     }
 
     const uploadFile = ({type, file}) => {
-        console.log(type)
-        console.log(file.name)
-        return Promise.resolve(true)
+        console.log('ASDASD')
+        //return Promise.reject('No')
+        return window.BobAPI.uploadGameFile(this.props.game.id, type, file)
     }
 
     return updateGameIfChanged().then(uploadFilesIfAdded)

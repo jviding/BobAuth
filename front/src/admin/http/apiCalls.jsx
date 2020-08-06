@@ -64,7 +64,10 @@ export default class BobAPI {
     }
 
     uploadGameFile(gameID, fileType, file) {
-        return Promise.reject('Uploading file not implemeted!')
+        const fd = new FormData()
+        fd.append('fileType', fileType)
+        fd.append('file', file)
+        return this.Requests.POSTFile(this.URLs.gameFile, fd)
     }
 
     // USERS

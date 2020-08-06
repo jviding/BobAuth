@@ -49,7 +49,7 @@ export default class Games extends React.Component {
                     key={index}
                     game={game}
                     gameCount={this.state.games.length}
-                    deleted={this.loadGames} />
+                    update={this.loadGames} />
                 )
         })
 

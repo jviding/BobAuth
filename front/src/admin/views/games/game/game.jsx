@@ -42,13 +42,13 @@ export default class Game extends React.Component {
 
     saveChanges() {
         saveService.call(this)
-        .then(() => console.log('SUCCESS'))
+        .then(() => this.props.update())
         .catch((e) => this.setState({ error: e }))
     }
 
     deleteGame() {
         window.BobAPI.deleteGame(this.props.game.id)
-        .then(() => this.props.deleted())
+        .then(() => this.props.update())
         .catch((e) => this.setState({ error: e }))
     }
 

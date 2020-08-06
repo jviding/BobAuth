@@ -11,8 +11,9 @@ export default class Urls {
 
         this.user = BASE_URL + '/user'
         this.users = BASE_URL + '/users'
+        
         this.game = BASE_URL + '/game'
-        this.gameFile = BASE_URL + '/game/file'
+        this.gameFile = BASE_URL + '/gamefile'
         this.games = BASE_URL + '/games'
     }
 
