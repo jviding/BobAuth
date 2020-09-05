@@ -3,8 +3,7 @@ package com.bob.admin.endpoints.game;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bob.admin.lib.AuthService;
-import com.bob.admin.lib.http.Request;
-import com.bob.admin.lib.http.RequestService;
+import com.bob.admin.lib.http.JsonRequest;
 import com.bob.admin.lib.http.Response;
 
 import org.json.simple.JSONArray;
@@ -28,28 +27,16 @@ public class GameController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        if (AuthService.isAdmin(cookie)) {
-            try {
-                
-                Request req = new Request("POST", "games", "game");
-                
-                req.addBodyParams("gameName", post.gameName);
-
-                Response res = RequestService.send(req);
-
-                response.setStatus(res.getResponseCode());
-
-                return "{}";
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }            
+        if (AuthService.isAdmin(cookie)) {  
+            JsonRequest req = new JsonRequest("POST", "games", "game");
+            req.addBodyParams("gameName", post.gameName);
+            Response res = req.send();
+            response.setStatus(res.getResponseCode());
+            return "{}";
         } else {
             response.setStatus(403);
             return "{}";
         }
-        response.setStatus(404);
-        return "{}";
     }
 
     @PutMapping(
@@ -63,29 +50,17 @@ public class GameController {
         HttpServletResponse response
     ) {
         if (AuthService.isAdmin(cookie)) {
-            try {
-                
-                Request req = new Request("PUT", "games", "game");
-                
-                req.addBodyParams("gameID", put.gameID);
-                req.addBodyParams("newGameName", put.newGameName);
-                req.addBodyParams("removedResourceFiles", (JSONArray) put.removedResourceFiles);
-
-                Response res = RequestService.send(req);
-
-                response.setStatus(res.getResponseCode());
-
-                return "{}";
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }            
+            JsonRequest req = new JsonRequest("PUT", "games", "game");
+            req.addBodyParams("gameID", put.gameID);
+            req.addBodyParams("newGameName", put.newGameName);
+            req.addBodyParams("removedResourceFiles", (JSONArray) put.removedResourceFiles);
+            Response res = req.send();
+            response.setStatus(res.getResponseCode());
+            return "{}";
         } else {
             response.setStatus(403);
             return "{}";
         }
-        response.setStatus(404);
-        return "{}";
     }
 
     @DeleteMapping(
@@ -98,28 +73,16 @@ public class GameController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        if (AuthService.isAdmin(cookie)) {
-            try {
-                
-                Request req = new Request("DELETE", "games", "game");
-                
-                req.addBodyParams("gameID", delete.gameID);
-
-                Response res = RequestService.send(req);
-
-                response.setStatus(res.getResponseCode());
-
-                return "{}";
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }            
+        if (AuthService.isAdmin(cookie)) {   
+            JsonRequest req = new JsonRequest("DELETE", "games", "game");
+            req.addBodyParams("gameID", delete.gameID);
+            Response res = req.send();
+            response.setStatus(res.getResponseCode());
+            return "{}";           
         } else {
             response.setStatus(403);
             return "{}";
         }
-        response.setStatus(404);
-        return "{}";
     }
 
 }

@@ -1,139 +1,98 @@
 package com.bob.admin.lib.http;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
-public class Request {
+
+public class Request extends RequestUrl {
     
     private String method;
-    private String url;
-    private String sessionCookie;
-    private String queryParams;
-    private JSONObject requestBody;
 
-    /**
-     * @param method    -> GET | POST | PUT | DELETE
-     * @param host      -> iam | games
-     * @param endpoint  -> login | logout | ...
-     * @param sessionCookie
-     */
-    public Request(String method, String host, String endpoint, String sessionCookie) throws Exception {
-        this(method, host, endpoint);
-        this.sessionCookie = sessionCookie;
-    }
-    public Request(String method, String host, String endpoint) throws Exception {
+    public Request(String method, String host, String endpoint) {
+        super(host, endpoint);
         this.method = method;
-        this.url = "http://" + this.getHostname(host) + ":" + this.getPort(host) + this.getPath(endpoint);
-        this.queryParams = "";
-        this.requestBody = new JSONObject();
     }
 
-    // PRIVATE
-
-    private String getHostname(String host) throws Exception {
-        switch(host) {
-            case "iam":
-                return "api-iam";
-            case "games":
-                return "api-games";
-            default:
-                throw new Exception("Unknown host.");
+    public Response send() {
+        try {
+            HttpURLConnection con = (HttpURLConnection) super.getUrl().openConnection();
+            con.setRequestMethod(this.method);
+            return readResponse(con);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Response(500, "Something went wrong!");
         }
     }
 
-    private String getPath(String endpoint) throws Exception {
-        switch(endpoint) {
-            case "login":
-                return "/login";
-            case "logout":
-                return "/logout";
-            case "profile":
-                return "/profile";
-            case "users":
-                return "/users";
-            case "user":
-                return "/user";
-            case "game":
-                return "/game";
-            case "gameFile":
-                return "/game/file";
-            case "games":
-                return "/games";
-            default:
-                throw new Exception("Unknown path.");
+    public Response send(Map<String,String> reqHeaders) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) super.getUrl().openConnection();
+            con.setRequestMethod(this.method);
+            setRequestHeaders(con, reqHeaders);
+            return readResponse(con);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Response(500, "Something went wrong!");
         }
     }
 
-    private String getPort(String host) throws Exception {
-        switch(host) {
-            case "iam":
-                return "8000";
-            case "games":
-                return "9000";
-            default:
-                throw new Exception("Unknown host.");
+    public Response send(Map<String,String> reqHeaders, byte[] body) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) super.getUrl().openConnection();
+            con.setRequestMethod(this.method);
+            setRequestHeaders(con, reqHeaders);
+            sendBody(con, body);
+            return readResponse(con);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Response(500, "Something went wrong!");
         }
     }
 
-    // PUBLIC
-
-    public String getMethod() {
-        return this.method;
-    }
-
-    public URL getUrl() throws MalformedURLException {
-        return new URL(this.url + this.queryParams);
-    }
-
-    public String getSessionCookie() throws Exception {
-        if (this.sessionCookie != null) {
-            return this.sessionCookie;
-        } else {
-            throw new Exception("No session cookie found!");
+    private void setRequestHeaders(HttpURLConnection con, Map<String,String> reqHeaders) {
+        for (Map.Entry<String,String> entry : reqHeaders.entrySet()) {
+            con.setRequestProperty(entry.getKey(), entry.getValue());
         }
     }
 
-    public void addQueryParams(String key, String value) throws UnsupportedEncodingException {
-        final String URL_SAFE_KEY = URLEncoder.encode(key, "utf-8");
-        final String URL_SAFE_VALUE = URLEncoder.encode(value, "utf-8");
-        if (this.queryParams.length() == 0) {
-            this.queryParams += "?" + URL_SAFE_KEY + "=" + URL_SAFE_VALUE;
-        } else {
-            this.queryParams += "&" + URL_SAFE_KEY + "=" + URL_SAFE_VALUE;
+    private void sendBody(HttpURLConnection con, byte[] body) throws IOException{
+        con.setDoOutput(true);
+        OutputStream os = con.getOutputStream();
+        os.write(body, 0, body.length);
+    }
+
+    private Response readResponse(HttpURLConnection con) throws UnsupportedEncodingException, IOException, ParseException {
+        int responseCode = con.getResponseCode();
+        Map<String, List<String>> responseHeaders = con.getHeaderFields();
+        String responseBody = readResponseBody(con);     
+        return new Response(responseCode, responseBody, responseHeaders);
+    }
+
+    private String readResponseBody(HttpURLConnection con) throws UnsupportedEncodingException, IOException {
+        InputStream is;
+        try {
+            is = con.getInputStream();
+        } catch (Exception e) {
+            is = con.getErrorStream();
         }
-    }
+        InputStreamReader isr = new InputStreamReader(is, "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        StringBuilder response = new StringBuilder();
+        String responseLine = null;
+        while ((responseLine = br.readLine()) != null) {
+            response.append(responseLine.trim());
+        }
+        return response.toString();
+    } 
 
-    @SuppressWarnings("unchecked")
-    public void addBodyParams(String key, String value) {
-        this.requestBody.put(key, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addBodyParams(String key, int value) {
-        this.requestBody.put(key, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addBodyParams(String key, boolean value) {
-        this.requestBody.put(key, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addBodyParams(String key, JSONArray arr) {
-        this.requestBody.put(key, arr);
-    }
-
-    public boolean hasBody() {
-        return !this.requestBody.isEmpty();
-    }
-
-    public String getBody() {
-        return this.requestBody.toJSONString();
-    }
 
 }

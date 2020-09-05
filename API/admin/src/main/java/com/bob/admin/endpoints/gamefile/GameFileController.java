@@ -3,16 +3,9 @@ package com.bob.admin.endpoints.gamefile;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bob.admin.lib.AuthService;
-import com.bob.admin.lib.http.Request;
-import com.bob.admin.lib.http.RequestService;
-import com.bob.admin.lib.http.Response;
 
-import org.json.simple.JSONArray;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;

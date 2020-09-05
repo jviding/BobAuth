@@ -4,8 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bob.admin.lib.http.Request;
-import com.bob.admin.lib.http.RequestService;
+import com.bob.admin.lib.http.JsonRequest;
 import com.bob.admin.lib.http.Response;
 
 import org.springframework.web.bind.annotation.CookieValue;
@@ -25,23 +24,12 @@ public class LoginController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        try {
-
-            Request req = new Request("POST", "iam", "login", cookie);
-
-            req.addBodyParams("username", login.username);
-            req.addBodyParams("password", login.password);
-
-            Response res = RequestService.send(req);
-
-            response.setStatus(res.getResponseCode());
-
-            response.addHeader("Set-Cookie", res.getSetCookieHeader());
-            
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
+        JsonRequest req = new JsonRequest("iam", "login", cookie);
+        req.addBodyParams("username", login.username);
+        req.addBodyParams("password", login.password);
+        Response res = req.send();
+        response.setStatus(res.getResponseCode());
+        response.addHeader("Set-Cookie", res.getSetCookieHeader());
         return "{}";
     }
 }

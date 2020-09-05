@@ -4,8 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bob.admin.lib.http.Request;
-import com.bob.admin.lib.http.RequestService;
+import com.bob.admin.lib.http.JsonRequest;
 import com.bob.admin.lib.http.Response;
 
 import org.springframework.web.bind.annotation.CookieValue;
@@ -24,22 +23,14 @@ public class ProfileController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        try {
-
-            Request req = new Request("GET", "iam", "profile", cookie);
-            Response res = RequestService.send(req);
-
-            response.setStatus(res.getResponseCode());
-
-            if (res.getResponseCode() == 200) {
-                return res.getResponseBody();
-            }
-            
-        } catch (Exception e) {
-            System.out.println(e);
+        JsonRequest req = new JsonRequest("GET", "iam", "profile", cookie);
+        Response res = req.send();
+        response.setStatus(res.getResponseCode());
+        if (res.getResponseCode() == 200) {
+            return res.getResponseBody();
+        } else {
+            return "{}";
         }
-
-        return "{}";
     }
 
     @PutMapping(
@@ -52,29 +43,18 @@ public class ProfileController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        try {
-
-            Request req = new Request("PUT", "iam", "profile", cookie);
-
-            req.addBodyParams("newEmail", put.newEmail);
-            req.addBodyParams("newPassword", put.newPassword);
-            req.addBodyParams("password", put.password);
-
-            Response res = RequestService.send(req);
-
-            response.setStatus(res.getResponseCode());
-
-            response.addHeader("Set-Cookie", res.getSetCookieHeader());
-
-            if (res.getResponseCode() == 200) {
-                return res.getResponseBody();
-            }
-
-        } catch (Exception e) {
-            System.out.println(e);
+        JsonRequest req = new JsonRequest("PUT", "iam", "profile", cookie);
+        req.addBodyParams("newEmail", put.newEmail);
+        req.addBodyParams("newPassword", put.newPassword);
+        req.addBodyParams("password", put.password);
+        Response res = req.send();
+        response.setStatus(res.getResponseCode());
+        response.addHeader("Set-Cookie", res.getSetCookieHeader());
+        if (res.getResponseCode() == 200) {
+            return res.getResponseBody();
+        } else {
+            return "{}";
         }
-
-        return "{}";
     }
 
 }

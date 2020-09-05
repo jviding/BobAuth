@@ -28,7 +28,7 @@ public class UserController {
     ) {
         try {
 
-            Request req = new Request("PUT", "iam", "user", cookie);
+            /*Request req = new Request("PUT", "iam", "user", cookie);
 
             req.addBodyParams("userID", put.userID);
             req.addBodyParams("email", put.email);
@@ -40,7 +40,7 @@ public class UserController {
 
             if (res.getResponseCode() == 200) {
                 return res.getResponseBody();
-            } 
+            } */
 
         } catch (Exception e) {
             System.out.println(e);
@@ -61,7 +61,7 @@ public class UserController {
     ) {
         try {
 
-            Request req = new Request("DELETE", "iam", "user", cookie);
+            /*Request req = new Request("DELETE", "iam", "user", cookie);
 
             req.addBodyParams("userID", delete.userID);
 
@@ -71,7 +71,7 @@ public class UserController {
 
             if (res.getResponseCode() == 200) {
                 return res.getResponseBody();
-            }
+            }*/
             
         } catch (Exception e) {
             System.out.println(e);
