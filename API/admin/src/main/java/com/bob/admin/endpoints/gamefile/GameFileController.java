@@ -21,35 +21,30 @@ public class GameFileController {
     )
     public String uploadGameFile(
         @RequestPart(value="fileType") String fileType,
-        @RequestPart(value="file") MultipartFile reportFile,
+        @RequestPart(value="file") MultipartFile file,
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
         if (AuthService.isAdmin(cookie)) {
-            try {
                 
-                //Request req = new Request("POST", "games", "game");
-                
-                //req.addBodyParams("gameName", post.gameName);
+            //Request req = new Request("POST", "games", "game");
+            
+            //req.addBodyParams("gameName", post.gameName);
 
-                //Response res = RequestService.send(req);
+            //Response res = RequestService.send(req);
 
-                //response.setStatus(res.getResponseCode());
+            //response.setStatus(res.getResponseCode());
 
-                System.out.println(fileType);
-                System.out.println(reportFile.getOriginalFilename());
+            System.out.println(fileType);
+            System.out.println(file.getOriginalFilename());
+            //System.out.println(file.getBytes());
 
-                return "{}";
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }            
+            return "{}";
+           
         } else {
             response.setStatus(403);
             return "{}";
         }
-        response.setStatus(404);
-        return "{}";
     }
 
 }
