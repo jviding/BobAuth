@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,14 +24,14 @@ public class Request extends RequestUrl {
     }
 
     public Response send() {
-        try {
-            HttpURLConnection con = (HttpURLConnection) super.getUrl().openConnection();
-            con.setRequestMethod(this.method);
-            return readResponse(con);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new Response(500, "Something went wrong!");
-        }
+        Map<String,String> emptyHeaders = new HashMap<>();
+        return send(emptyHeaders);
+    }
+
+    public Response send(String sessionCookie) {
+        Map<String,String> requestHeaders = new HashMap<>();
+        requestHeaders.put("Cookie", "sessionid=" + sessionCookie);
+        return send(requestHeaders); 
     }
 
     public Response send(Map<String,String> reqHeaders) {

@@ -19,7 +19,7 @@ public class Response {
         this.responseBody = responseBody;
     }
 
-    public Response(int responseCode, String responseBody, Map<String, List<String>> responseHeaders) throws ParseException {
+    public Response(int responseCode, String responseBody, Map<String, List<String>> responseHeaders) {
         this(responseCode, responseBody);
         this.responseHeaders = responseHeaders;
     }
@@ -32,7 +32,11 @@ public class Response {
         return this.responseHeaders;
     }
 
-    public String getSetCookieHeader() throws Exception {
+    public Boolean hasSessionCookie() {
+        return !getSessionCookie().isEmpty();
+    }
+
+    public String getSessionCookie() {
         final List<String> cookies;
         if (this.responseHeaders != null && (cookies = this.responseHeaders.get("Set-Cookie")) != null) {
             for (String cookie : cookies) {
@@ -41,7 +45,7 @@ public class Response {
                 }
             }
         }
-        throw new Exception("Couldn't find Set-Cookie for sessionid.");
+        return "";
     }
 
     public String getResponseBody() {

@@ -24,8 +24,8 @@ public class UsersController {
         HttpServletResponse response
     ) {
         if (AuthService.isAdmin(cookie)) { 
-            Request req = new Request("GET", "iam", "users", cookie);
-            Response res = req.send();
+            Request req = new Request("GET", "iam", "users");
+            Response res = req.send(cookie);
             response.setStatus(res.getResponseCode());
             if (res.getResponseCode() == 200) {
                 return res.getResponseBody();

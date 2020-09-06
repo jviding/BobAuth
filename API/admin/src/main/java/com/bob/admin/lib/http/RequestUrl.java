@@ -25,7 +25,11 @@ public class RequestUrl {
     }
 
     public URL getUrl() throws MalformedURLException {
-        return new URL(this.url + this.queryParams);
+        if (this.queryParams != null && !this.queryParams.isEmpty()) {
+            return new URL(this.url + this.queryParams);
+        } else {
+            return new URL(this.url);
+        }
     }
 
     // PRIVATE

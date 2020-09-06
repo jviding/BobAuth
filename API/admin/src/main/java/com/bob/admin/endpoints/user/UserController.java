@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bob.admin.lib.http.Request;
-import com.bob.admin.lib.http.RequestService;
+import com.bob.admin.lib.AuthService;
+import com.bob.admin.lib.http.JsonRequest;
 import com.bob.admin.lib.http.Response;
 
 import org.springframework.web.bind.annotation.CookieValue;
@@ -26,27 +26,22 @@ public class UserController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        try {
-
-            /*Request req = new Request("PUT", "iam", "user", cookie);
-
+        if (AuthService.isAdmin(cookie)) {
+            JsonRequest req = new JsonRequest("PUT", "iam", "user");
             req.addBodyParams("userID", put.userID);
             req.addBodyParams("email", put.email);
             req.addBodyParams("isAdmin", put.isAdmin);
-
-            Response res = RequestService.send(req);
-
+            Response res = req.send(cookie);
             response.setStatus(res.getResponseCode());
-
             if (res.getResponseCode() == 200) {
                 return res.getResponseBody();
-            } */
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return "{}";
+            } else {
+                return "{}";
+            }
+        } else {
+            response.setStatus(403);
+            return "{}";
+        } 
     }
 
     @DeleteMapping(
@@ -59,25 +54,20 @@ public class UserController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        try {
-
-            /*Request req = new Request("DELETE", "iam", "user", cookie);
-
+        if (AuthService.isAdmin(cookie)) {
+            JsonRequest req = new JsonRequest("DELETE", "iam", "user");
             req.addBodyParams("userID", delete.userID);
-
-            Response res = RequestService.send(req);
-
+            Response res = req.send(cookie);
             response.setStatus(res.getResponseCode());
-
             if (res.getResponseCode() == 200) {
                 return res.getResponseBody();
-            }*/
-            
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return "{}";
+            } else {
+                return "{}";
+            }
+        } else {
+            response.setStatus(403);
+            return "{}";
+        }        
     }
 
 }

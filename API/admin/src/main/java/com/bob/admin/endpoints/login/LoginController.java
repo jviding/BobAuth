@@ -24,12 +24,14 @@ public class LoginController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        JsonRequest req = new JsonRequest("iam", "login", cookie);
+        JsonRequest req = new JsonRequest("POST", "iam", "login");
         req.addBodyParams("username", login.username);
         req.addBodyParams("password", login.password);
-        Response res = req.send();
+        Response res = req.send(cookie);
         response.setStatus(res.getResponseCode());
-        response.addHeader("Set-Cookie", res.getSetCookieHeader());
+        if (res.hasSessionCookie()) {
+            response.addHeader("Set-Cookie", res.getSessionCookie());
+        }
         return "{}";
     }
 }

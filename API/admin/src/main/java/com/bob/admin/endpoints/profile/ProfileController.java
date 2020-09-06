@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bob.admin.lib.http.JsonRequest;
+import com.bob.admin.lib.http.Request;
 import com.bob.admin.lib.http.Response;
 
 import org.springframework.web.bind.annotation.CookieValue;
@@ -23,8 +24,8 @@ public class ProfileController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        JsonRequest req = new JsonRequest("GET", "iam", "profile", cookie);
-        Response res = req.send();
+        Request req = new Request("GET", "iam", "profile");
+        Response res = req.send(cookie);
         response.setStatus(res.getResponseCode());
         if (res.getResponseCode() == 200) {
             return res.getResponseBody();
@@ -43,13 +44,15 @@ public class ProfileController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        JsonRequest req = new JsonRequest("PUT", "iam", "profile", cookie);
+        JsonRequest req = new JsonRequest("PUT", "iam", "profile");
         req.addBodyParams("newEmail", put.newEmail);
         req.addBodyParams("newPassword", put.newPassword);
         req.addBodyParams("password", put.password);
-        Response res = req.send();
+        Response res = req.send(cookie);
         response.setStatus(res.getResponseCode());
-        response.addHeader("Set-Cookie", res.getSetCookieHeader());
+        if (res.hasSessionCookie()) {
+            response.addHeader("Set-Cookie", res.getSessionCookie());
+        }
         if (res.getResponseCode() == 200) {
             return res.getResponseBody();
         } else {

@@ -10,12 +10,6 @@ public class JsonRequest extends Request {
     
     private Map<String,String> requestHeaders = new HashMap<>();
     private JSONObject requestBody = new JSONObject();
-    
-
-    public JsonRequest(String method, String host, String endpoint, String sessionCookie) {
-        this(method, host, endpoint);
-        this.requestHeaders.put("Cookie", "sessionid=" + sessionCookie);
-    }
 
     public JsonRequest(String method, String host, String endpoint) {
         super(method, host, endpoint);
@@ -42,6 +36,13 @@ public class JsonRequest extends Request {
         this.requestBody.put(key, arr);
     }
 
+    @Override
+    public Response send(String sessionCookie) {
+        this.requestHeaders.put("Cookie", "sessionid=" + sessionCookie);
+        return send();
+    }
+
+    @Override
     public Response send() {
         try {
             byte[] body = this.requestBody.toJSONString().getBytes("utf-8");
