@@ -15,10 +15,10 @@ public class RequestUrl {
     }
 
     public void addQueryParams(String key, String value) throws UnsupportedEncodingException {
-        final String URL_SAFE_KEY = URLEncoder.encode(key, "utf-8");
-        final String URL_SAFE_VALUE = URLEncoder.encode(value, "utf-8");
-        if (this.queryParams.length() == 0) {
-            this.queryParams += "?" + URL_SAFE_KEY + "=" + URL_SAFE_VALUE;
+        String URL_SAFE_KEY = URLEncoder.encode(key, "utf-8");
+        String URL_SAFE_VALUE = URLEncoder.encode(value, "utf-8");
+        if (this.queryParams == null || this.queryParams.isEmpty()) {
+            this.queryParams = "?" + URL_SAFE_KEY + "=" + URL_SAFE_VALUE;
         } else {
             this.queryParams += "&" + URL_SAFE_KEY + "=" + URL_SAFE_VALUE;
         }
@@ -59,8 +59,8 @@ public class RequestUrl {
                 return "/user";
             case "game":
                 return "/game";
-            case "gameFile":
-                return "/game/file";
+            case "gamefile":
+                return "/gamefile";
             case "games":
                 return "/games";
             default:

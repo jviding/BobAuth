@@ -24,8 +24,8 @@ public class Request extends RequestUrl {
     }
 
     public Response send() {
-        Map<String,String> emptyHeaders = new HashMap<>();
-        return send(emptyHeaders);
+        Map<String,String> withoutHeaders = new HashMap<>();
+        return send(withoutHeaders);
     }
 
     public Response send(String sessionCookie) {
