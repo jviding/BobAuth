@@ -32,11 +32,34 @@ class GameFileController @Inject() (
 
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
-    def uploadFile() = Action { 
+    def uploadFile() = Action(parse.multipartFormData) { request =>
 
         // Check type
         // Store file (sha filename)
         // Update game model
+
+        println(request)
+
+/*        request.body.map {
+            println(_)
+        }*/
+/*
+        request.body
+            .file("picture")
+            .map { picture =>
+            // only get the last part of the filename
+            // otherwise someone can send a path like ../../home/foo/bar.txt to write to other files on the system
+            val filename    = Paths.get(picture.filename).getFileName
+            val fileSize    = picture.fileSize
+            val contentType = picture.contentType
+
+            picture.ref.copyTo(Paths.get(s"/tmp/picture/$filename"), replace = true)
+            Ok("File uploaded")
+            }
+            .getOrElse {
+            Redirect(routes.HomeController.index).flashing("error" -> "Missing file")
+            }*/
+
 
         Ok("")
     }

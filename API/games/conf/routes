@@ -11,6 +11,8 @@ POST    /game                       controllers.GameController.createGame()
 PUT     /game                       controllers.GameController.updateGame()
 DELETE  /game                       controllers.GameController.deleteGame()
 
+POST    /gamefile                   controllers.GameFileController.uploadFile()
+
 # Create
 # Read
 # Update
