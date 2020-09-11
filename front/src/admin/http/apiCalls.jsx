@@ -65,6 +65,7 @@ export default class BobAPI {
 
     uploadGameFile(gameID, fileType, file) {
         const fd = new FormData()
+        fd.append('gameID', gameID)
         fd.append('fileType', fileType)
         fd.append('file', file)
         return this.Requests.POSTFile(this.URLs.gameFile, fd)
