@@ -11,6 +11,7 @@ import scala.concurrent.Future
 
 
 class ResponseFilter @Inject() (implicit val mat: Materializer, ec: ExecutionContext) extends Filter {
+    
     def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
         nextFilter(requestHeader).map { result =>
             val timeStamp: String = getTimeStamp()

@@ -7,6 +7,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
+import play.api.libs.iteratee.Enumerator
 
 import play.modules.reactivemongo.{
     MongoController,
@@ -21,6 +22,11 @@ import reactivemongo.api.ReadPreference
 import reactivemongo.play.json._
 import reactivemongo.api.commands.WriteResult
 
+import reactivemongo.api.BSONSerializationPack
+import reactivemongo.api.gridfs.{ DefaultFileToSave, GridFS }
+import reactivemongo.api.gridfs.Implicits._
+import reactivemongo.bson.BSONValue
+
 import scala.util.{ Try, Success, Failure }
 
 class GameFileController @Inject() (
@@ -34,33 +40,74 @@ class GameFileController @Inject() (
 
     def uploadFile() = Action(parse.multipartFormData) { request =>
 
-        // Check type
-        // Store file (sha filename)
-        // Update game model
+        type BSONFile = reactivemongo.api.gridfs.ReadFile[BSONSerializationPack.type, BSONValue]
 
-        println(request)
-
-/*        request.body.map {
-            println(_)
+        /*def saveFile(
+            gridfs: GridFS[BSONSerializationPack.type],
+            filename: String, 
+            contentType: Option[String], 
+            data: Enumerator[Array[Byte]]
+        ): Future[BSONFile] = {
+            val gridfsObj = DefaultFileToSave(Some(filename), contentType)
+            gridfs.save(data, gridfsObj)
         }*/
-/*
-        request.body
-            .file("picture")
-            .map { picture =>
-            // only get the last part of the filename
-            // otherwise someone can send a path like ../../home/foo/bar.txt to write to other files on the system
-            val filename    = Paths.get(picture.filename).getFileName
-            val fileSize    = picture.fileSize
-            val contentType = picture.contentType
 
-            picture.ref.copyTo(Paths.get(s"/tmp/picture/$filename"), replace = true)
-            Ok("File uploaded")
-            }
-            .getOrElse {
-            Redirect(routes.HomeController.index).flashing("error" -> "Missing file")
-            }*/
+        //val res = 
+        for {
+            id <- request.body.dataParts.get("gameID")
+            fileType <- request.body.dataParts.get("fileType")
+            file <- request.body.file("file")
+        } yield {
+            println(id)
+            println(fileType)
+            println(file)
+
+
+            // Store in resource file name in game
+            // Store gamefile
+        }
 
 
         Ok("")
     }
+
+    def getFile() = Action {
+        Ok("")
+    }
 }
+
+/*
+FIND FILE:
+
+import scala.concurrent.{ ExecutionContext, Future }
+
+import reactivemongo.api.BSONSerializationPack
+import reactivemongo.api.gridfs.{ GridFS, ReadFile }
+import reactivemongo.api.gridfs.Implicits._
+import reactivemongo.bson.{ BSONDocument, BSONValue }
+
+def gridfsByFilename(
+  gridfs: GridFS[BSONSerializationPack.type],
+  filename: String
+)(implicit ec: ExecutionContext): Future[ReadFile[BSONSerializationPack.type, BSONValue]] = {
+  def cursor = gridfs.find(BSONDocument("filename" -> filename))
+  cursor.head
+}
+*/
+
+/*
+DELETE FILE:
+
+import scala.concurrent.{ ExecutionContext, Future }
+
+import reactivemongo.api.BSONSerializationPack
+import reactivemongo.api.gridfs.GridFS //, ReadFile }
+//import reactivemongo.api.gridfs.Implicits._
+import reactivemongo.bson.BSONValue
+
+def removeFrom(
+  gridfs: GridFS[BSONSerializationPack.type],
+  id: BSONValue // see ReadFile.id
+)(implicit ec: ExecutionContext): Future[Unit] =
+  gridfs.remove(id).map(_ => {})
+*/
