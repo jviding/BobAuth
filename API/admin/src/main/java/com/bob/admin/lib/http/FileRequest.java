@@ -47,13 +47,11 @@ public class FileRequest extends Request {
     @Override
     public Response send() {
         try {
-            byte[] body = getBody();
-              
+            // For debugging:
             //import java.nio.charset.StandardCharsets;
+            //byte[] body = getBody();
             //String b = new String(body, StandardCharsets.US_ASCII);
             //System.out.println(b);
-
-            //return new Response(500, "Something went wrong!");
             return super.send(this.requestHeaders, getBody());
         } catch (Exception e) {
             System.out.println(e);
@@ -124,7 +122,11 @@ public class FileRequest extends Request {
             lines += "Content-Type: \"" + contentType + "\"; charset=utf-8" + LINE_FEED;
             lines += LINE_FEED;
     
-            byte[][] byteArr = {lines.getBytes(), this.file.getBytes()};
+            byte[] head = lines.getBytes();
+            byte[] body = this.file.getBytes();
+            byte[] end = LINE_FEED.getBytes();
+            byte[][] byteArr = {head,body,end};
+
             return combineBytes(byteArr);
         } else {
             return "".getBytes();
@@ -132,7 +134,7 @@ public class FileRequest extends Request {
     }
 
     private byte[] getBody() throws IOException {
-        byte[] lastBoundary = ("--" + BOUNDARY + "--" + LINE_FEED).getBytes();
+        byte[] lastBoundary = ("--" + BOUNDARY + "--").getBytes();
         byte[][] byteArr = { getFormFields(), getFileField(), lastBoundary };
         return combineBytes(byteArr);
     }
