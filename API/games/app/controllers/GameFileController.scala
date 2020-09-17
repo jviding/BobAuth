@@ -7,7 +7,6 @@ import scala.concurrent.{ ExecutionContext, Future }
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
-import play.api.libs.iteratee.Enumerator
 
 import play.modules.reactivemongo.{
     MongoController,
@@ -39,18 +38,6 @@ class GameFileController @Inject() (
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
     def uploadFile() = Action(parse.multipartFormData) { request =>
-
-        type BSONFile = reactivemongo.api.gridfs.ReadFile[BSONSerializationPack.type, BSONValue]
-
-        /*def saveFile(
-            gridfs: GridFS[BSONSerializationPack.type],
-            filename: String, 
-            contentType: Option[String], 
-            data: Enumerator[Array[Byte]]
-        ): Future[BSONFile] = {
-            val gridfsObj = DefaultFileToSave(Some(filename), contentType)
-            gridfs.save(data, gridfsObj)
-        }*/
 
         //val res = 
         for {

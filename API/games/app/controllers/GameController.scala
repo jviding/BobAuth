@@ -33,32 +33,16 @@ class GameController @Inject() (
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
     def createGame() = Action.async(parse.json) { request: Request[JsValue] =>
-        
-        val gameName: String = (request.body.as[JsObject] \ "gameName").validate[String].getOrElse("")
-
-        def isNameFree(gameName: String): Future[Boolean] = gamesCollection.flatMap(
-            _.find(BSONDocument("name" -> gameName)).one[BSONDocument].map {
-                case Some(game) => false
-                case None => true
-            }
-        )
-
-        def create(gameName: String): Future[Int] = {
-            val newGame = BSONDocument(
-                "name" -> gameName, 
-                "mainFile" -> "",
-                "resourceFiles" -> BSONArray("a", "b", "c")
-            )
-            gamesCollection.flatMap(
-                _.insert.one(newGame).map(_.n)
-            )
-        }
-
-        isNameFree(gameName).flatMap {
-            case false => Future { Conflict("Game with the given name already exists") }
-            case true => create(gameName).map {
-                case x if x > 0 => Ok("")
-                case _ => InternalServerError("Something went wrong")
+        (request.body.as[JsObject] \ "gameName")
+        .validate[String]
+        .getOrElse("") match {
+            case name if name.length == 0 => Future { BadRequest("Name was empty") }
+            case name => isNameFree(name).flatMap {
+                case false => Future { Conflict("Game with the given name already exists") }
+                case true => create(name).map {
+                    case false => InternalServerError("Something went wrong")
+                    case true => Ok("")
+                }
             }
         }
     }
@@ -119,24 +103,49 @@ class GameController @Inject() (
     }
 
     def deleteGame() = Action.async(parse.json) { request: Request[JsValue] =>
-
-        val gameID: Try[BSONObjectID] = BSONObjectID.parse(
-            (request.body.as[JsObject] \ "gameID").validate[String].getOrElse("")
-        )
-
-        def delete(gameID: BSONObjectID) = {
-            val gameSelector = BSONDocument("_id" -> gameID)
-            gamesCollection.flatMap(
-                _.delete.one(gameSelector).map(_.n)
-            )
-        }
-
-        gameID match {
-            case Failure(e) =>  Future { BadRequest("Invalid gameID") }
+        BSONObjectID.parse(
+            (request.body.as[JsObject] \ "gameID")
+            .validate[String]
+            .getOrElse("")
+        ) match {
+            case Failure(e) => Future { BadRequest("Invalid gameID") }
             case Success(gameID) => delete(gameID).map {
-                case x if x > 0 => Ok("")
-                case _ => NotFound("No games found with the given gameID")
-            }  
+                case true => Ok("")
+                case false => NotFound("No games found with the given gameID")
+            } 
         }
     }
+
+
+    private def isNameFree(gameName: String): Future[Boolean] = gamesCollection.flatMap(
+        _.find(BSONDocument("name" -> gameName))
+        .one[BSONDocument]
+        .map {
+            case Some(game) => false
+            case None => true
+        }
+    )
+
+    private def create(gameName: String): Future[Boolean] = gamesCollection.flatMap(
+        _.insert
+        .one(BSONDocument(
+            "name" -> gameName, 
+            "mainFile" -> "",
+            "resourceFiles" -> BSONArray()
+        ))
+        .map(_.n match {
+            case x if x > 0 => true
+            case _ => false
+        })
+    )
+
+    private def delete(gameID: BSONObjectID): Future[Boolean] = gamesCollection.flatMap(
+        _.delete
+        .one(BSONDocument("_id" -> gameID))
+        .map(_.n match {
+            case x if x > 0 => true
+            case _ => false
+        })
+    )
+
 }
