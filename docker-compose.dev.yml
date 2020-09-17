@@ -25,8 +25,8 @@ services:
         volumes:
             - ./API/games:/games
         # Use if should be available on host
-        #ports:
-        #    - "9000:9000"
+        ports:
+            - "9000:9000"
         #command: sbt run
         # Use sbt in interactive mode during development
         # 1. docker exec -it bobauth_api-games_1 /bin/bash
