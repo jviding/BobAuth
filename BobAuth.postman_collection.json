@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "4362123d-08c4-439f-b79a-5af5cd341544",
+		"name": "BobAuth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "admin",
+					"item": [],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "games",
+					"item": [
+						{
+							"name": "Load game",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Save game",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get games",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{games_url}}/games",
+									"host": [
+										"{{games_url}}"
+									],
+									"path": [
+										"games"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create game",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"gameName\":\"qweaassd\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{games_url}}/game",
+									"host": [
+										"{{games_url}}"
+									],
+									"path": [
+										"game"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update game",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete game",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"gameID\":\"5f2ad0f1333d8542c5faf859\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{games_url}}/game",
+									"host": [
+										"{{games_url}}"
+									],
+									"path": [
+										"game"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "iam",
+					"item": [],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "home",
+					"item": [],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "files",
+					"item": [],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
