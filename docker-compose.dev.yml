@@ -66,6 +66,19 @@ services:
         depends_on:
             - data-iam
 
+    api-fs:
+        build:
+            context: ./API/files
+            dockerfile: dev.Dockerfile
+        restart: always
+        volumes:
+            - ./API/files:/app
+            - ./data/files/gameFiles:/uploads
+        ports:
+            - "9090:9090"
+        #command: lein ring server-headless
+        command: sleep 36000
+
     data-games:
         build:
             context: ./data/games
