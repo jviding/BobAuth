@@ -25,7 +25,7 @@ import scala.util.{ Try, Success, Failure }
 
 class GameController @Inject() (
     controllerComponents: ControllerComponents,
-    val reactiveMongoApi: ReactiveMongoApi
+    val ReactiveMongoApi: ReactiveMongoApi
 ) extends AbstractController(controllerComponents) with MongoController with ReactiveMongoComponents {
 
     implicit def ec: ExecutionContext = controllerComponents.executionContext
@@ -110,8 +110,8 @@ class GameController @Inject() (
         ) match {
             case Failure(e) => Future { BadRequest("Invalid gameID") }
             case Success(gameID) => delete(gameID).map {
-                case true => Ok("")
                 case false => NotFound("No games found with the given gameID")
+                case true => Ok("")
             } 
         }
     }
