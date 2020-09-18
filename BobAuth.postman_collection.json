@@ -85,10 +85,25 @@
 						{
 							"name": "Update game",
 							"request": {
-								"method": "GET",
+								"method": "PUT",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"gameID\":\"5f29090c333d8542c5faef72\",\"newGameName\":\"qwe\",\"removedResourceFiles\":[]}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": ""
+									"raw": "{{games_url}}/game",
+									"host": [
+										"{{games_url}}"
+									],
+									"path": [
+										"game"
+									]
 								}
 							},
 							"response": []
@@ -137,7 +152,50 @@
 				},
 				{
 					"name": "files",
-					"item": [],
+					"item": [
+						{
+							"name": "Get file",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{files_url}}",
+									"host": [
+										"{{files_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post file",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{files_url}}",
+									"host": [
+										"{{files_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete file",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{files_url}}",
+									"host": [
+										"{{files_url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				}
