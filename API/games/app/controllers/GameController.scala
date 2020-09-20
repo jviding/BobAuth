@@ -25,7 +25,7 @@ import scala.util.{ Try, Success, Failure }
 
 class GameController @Inject() (
     controllerComponents: ControllerComponents,
-    val ReactiveMongoApi: ReactiveMongoApi
+    val reactiveMongoApi: ReactiveMongoApi
 ) extends AbstractController(controllerComponents) with MongoController with ReactiveMongoComponents {
 
     implicit def ec: ExecutionContext = controllerComponents.executionContext
