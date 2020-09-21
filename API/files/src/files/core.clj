@@ -12,9 +12,10 @@
             [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             [files.endpoints.get :refer [getFile, getFilesInfo]]
             [files.endpoints.post :refer [postFile]]
-            [files.endpoints.delete :refer [deleteFile]]))
+            [files.endpoints.delete :refer [deleteDirectory, deleteFile]]))
 
-
+;; TODO
+;; Schema + validation
 (defroutes app
   (GET "/:gameID" request
     (let [gameID (get (get request :route-params) :gameID)]
@@ -29,6 +30,9 @@
           type (get (get request :route-params) :type)
           file (get (get request :multipart-params) "file")]
       (postFile gameID type file)))
+  (DELETE "/:gameID" request
+    (let [gameID (get (get request :route-params) :gameID)]
+      (deleteDirectory gameID)))
   (DELETE "/:gameID/:type/:filename" request
     (let [gameID (get (get request :route-params) :gameID)
           type (get (get request :route-params) :type)

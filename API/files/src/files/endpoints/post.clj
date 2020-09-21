@@ -3,6 +3,7 @@
             [files.lib.validator :refer [isValidGameID, isValidType, isValidFile]]
             [files.lib.converter :refer [hexify]]))
 
+
 (defn- hasFolder [gameID] 
   (.exists (io/file (str "/uploads/" gameID))))
 
