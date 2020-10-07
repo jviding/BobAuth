@@ -32,6 +32,10 @@ class GameController @Inject() (
 
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
+    def getGame() = Action {
+        Ok("")
+    }
+
     def createGame() = Action.async(parse.json) { request: Request[JsValue] =>
         (request.body.as[JsObject] \ "gameName")
         .validate[String]
@@ -48,6 +52,10 @@ class GameController @Inject() (
     }
 
     def updateGame() = Action.async(parse.json) { request: Request[JsValue] =>
+
+        // Keep file info only in FS, not here
+        // Here track only filename and other relevant info
+
 
         // TODO: REMOVE STORED RESOURCE FILES 
         // Not only from filenames from Game object!!!
@@ -133,19 +141,13 @@ class GameController @Inject() (
             "mainFile" -> "",
             "resourceFiles" -> BSONArray()
         ))
-        .map(_.n match {
-            case x if x > 0 => true
-            case _ => false
-        })
+        .map(_.n > 0)
     )
 
     private def delete(gameID: BSONObjectID): Future[Boolean] = gamesCollection.flatMap(
         _.delete
         .one(BSONDocument("_id" -> gameID))
-        .map(_.n match {
-            case x if x > 0 => true
-            case _ => false
-        })
+        .map(_.n > 0)
     )
 
 }
