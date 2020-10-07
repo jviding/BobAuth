@@ -1,7 +1,8 @@
 (ns files.endpoints.post
   (:require [clojure.java.io :as io]
             [files.lib.validator :refer [isValidGameID, isValidType, isValidFile]]
-            [files.lib.converter :refer [hexify]]))
+            [files.lib.converter :refer [hexify]]
+            [ring.util.response :refer [response, bad-request]]))
 
 
 (defn- hasFolder [gameID] 
@@ -19,14 +20,12 @@
         filePath (str "/uploads/" gameID "/" type "/" filenameAsHex)
         output (java.io.File. filePath)]
     (io/copy input output)
-    (str "<h1>Success</h1>")))
+    {:message "Success"}))
 
-;; TODO:
-;; Return error messages as JSON
-;; Return success no body 200
+
 (defn postFile [gameID type file]
   (cond
-    (not (isValidGameID gameID)) (str "<h1>Invalid gameID</h1>")
-    (not (isValidType type)) (str "<h1>Invalid type</h1>")
-    (not (isValidFile file)) (str "<h1>Invalid file</h1>")
-    :else (saveFile gameID type file)))
+    (not (isValidGameID gameID)) (bad-request {:message "Invalid gameID"})
+    (not (isValidType type)) (bad-request {:message "Invalid type"})
+    (not (isValidFile file)) (bad-request {:message "Invalid file"})
+    :else (response (saveFile gameID type file))))

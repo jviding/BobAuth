@@ -1,22 +1,19 @@
-# files
-
-A Clojure library designed to ... well, that part is up to you.
-
 ## Usage
 
-FIXME
+$ lein run
 
-## License
+Listens at port 9090.
 
-Copyright © 2020 FIXME
+## Details
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
+File storage for Bob Games.
 
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+Accepts .html, .js, and .css files.
+
+Max size for a file is 5MB.
+
+Filenames are handled transparently in hex format.
+
+## API endpoints
+
+See core.clj or Postman collection for details.
