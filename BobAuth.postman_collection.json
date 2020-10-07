@@ -154,6 +154,17 @@
 					"name": "files",
 					"item": [
 						{
+							"name": "Get files info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Get file",
 							"request": {
 								"method": "GET",
@@ -190,6 +201,23 @@
 									"raw": "{{files_url}}",
 									"host": [
 										"{{files_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete directory",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{files_url}}/1234",
+									"host": [
+										"{{files_url}}"
+									],
+									"path": [
+										"1234"
 									]
 								}
 							},

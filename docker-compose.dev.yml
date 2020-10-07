@@ -74,10 +74,9 @@ services:
         volumes:
             - ./API/files:/app
             - ./data/files/gameFiles:/uploads
-        ports:
-            - "9090:9090"
-        #command: lein ring server-headless
-        command: sleep 36000
+        #ports:
+        #    - "9090:9090"
+        command: lein run
 
     data-games:
         build:
