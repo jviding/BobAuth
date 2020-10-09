@@ -18,28 +18,6 @@
 					"name": "games",
 					"item": [
 						{
-							"name": "Load game",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": ""
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Save game",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": ""
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Get games",
 							"request": {
 								"method": "GET",
@@ -52,6 +30,17 @@
 									"path": [
 										"games"
 									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get game",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
 								}
 							},
 							"response": []
@@ -133,6 +122,28 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Save game",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Load game",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -173,6 +184,23 @@
 									"raw": "{{files_url}}",
 									"host": [
 										"{{files_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create directory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{games_url}}/123",
+									"host": [
+										"{{games_url}}"
+									],
+									"path": [
+										"123"
 									]
 								}
 							},
