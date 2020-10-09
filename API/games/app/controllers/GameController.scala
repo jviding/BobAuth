@@ -23,6 +23,10 @@ import reactivemongo.api.commands.WriteResult
 
 import scala.util.{ Try, Success, Failure }
 
+import scalaj.http._
+  
+import lib.Validator._
+
 class GameController @Inject() (
     controllerComponents: ControllerComponents,
     val reactiveMongoApi: ReactiveMongoApi
@@ -32,21 +36,20 @@ class GameController @Inject() (
 
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
-    def getGame() = Action {
-        Ok("")
-    }
-
-    def createGame() = Action.async(parse.json) { request: Request[JsValue] =>
-        (request.body.as[JsObject] \ "gameName")
-        .validate[String]
-        .getOrElse("") match {
-            case name if name.length == 0 => Future { BadRequest("Name was empty") }
-            case name => isNameFree(name).flatMap {
-                case false => Future { Conflict("Game with the given name already exists") }
-                case true => create(name).map {
-                    case false => InternalServerError("Something went wrong")
-                    case true => Ok("")
-                }
+    def createGame(gameName: String) = Action.async {
+        isValidGameName(gameName) match {
+            case false => Future { BadRequest("Invalid game name") }
+            case true => isNameFree(gameName).flatMap {
+                case false => Future { Conflict("Game name is already in use") }
+                case true => { create(gameName).flatMap {
+                    case None => Future { BadRequest("Something went wrong") }
+                    case Some(id) => {
+                        val res: HttpResponse[String] = Http("http://api-files:9090/" + id.stringify).method("POST").asString
+                        println(res)
+                    
+                        Future { Ok("") }
+                    }
+                }}
             }
         }
     }
@@ -124,7 +127,6 @@ class GameController @Inject() (
         }
     }
 
-
     private def isNameFree(gameName: String): Future[Boolean] = gamesCollection.flatMap(
         _.find(BSONDocument("name" -> gameName))
         .one[BSONDocument]
@@ -134,15 +136,20 @@ class GameController @Inject() (
         }
     )
 
-    private def create(gameName: String): Future[Boolean] = gamesCollection.flatMap(
-        _.insert
-        .one(BSONDocument(
-            "name" -> gameName, 
-            "mainFile" -> "",
-            "resourceFiles" -> BSONArray()
-        ))
-        .map(_.n > 0)
-    )
+    private def create(gameName: String): Future[Option[BSONObjectID]] = {
+        val id = BSONObjectID.generate()
+        gamesCollection.flatMap(
+            _.insert
+            .one(BSONDocument(
+                "_id" -> id,
+                "name" -> gameName,
+            ))
+            .map(_.n match {
+                case x if x > 0 => Some(id)
+                case _ => None
+            })
+        )
+    }
 
     private def delete(gameID: BSONObjectID): Future[Boolean] = gamesCollection.flatMap(
         _.delete

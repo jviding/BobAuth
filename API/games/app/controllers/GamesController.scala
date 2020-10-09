@@ -31,28 +31,28 @@ class GamesController @Inject() (
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
     def getGames() = Action.async {
-
-        val games: Future[List[JsObject]] = gamesCollection.flatMap(
+        gamesCollection.flatMap(
             _.find(BSONDocument())
             .cursor[JsObject](ReadPreference.primary)
             .collect[List](-1, Cursor.FailOnError[List[JsObject]]())
         )
+        .map(
+            _.map(formatGame(_))
+        )
+        .map(Json.toJson(_))
+        .map(Ok(_))
+    }
 
-        def formatGame(game: JsObject): JsObject = {
-            val id: JsResult[String] = (game \ "_id" \ "$oid").validate[String]
-            val name: JsResult[String] = (game \ "name").validate[String]
-            val mainFile: JsResult[String] = (game \ "mainFile").validate[String]
-            val resourceFiles: JsResult[Seq[String]] = (game \ "resourceFiles").validate[Seq[String]]
-            Json.obj(
-                "id" -> JsString(id.getOrElse("")),
-                "name" -> JsString(name.getOrElse("")),
-                "mainFile" -> JsString(mainFile.getOrElse("")),
-                "resourceFiles" -> JsArray(resourceFiles.getOrElse(Seq.empty[String]).map(JsString(_)))
-            )
-        }
-
-        val formattedGames: Future[List[JsObject]] = games.map(_.map(formatGame(_)))
-
-        formattedGames.map(Json.toJson(_)).map(Ok(_))
+    private def formatGame(game: JsObject): JsObject = {
+        val id: JsResult[String] = (game \ "_id" \ "$oid").validate[String]
+        val name: JsResult[String] = (game \ "name").validate[String]
+        val mainFile: JsResult[String] = (game \ "mainFile").validate[String]
+        val resourceFiles: JsResult[Seq[String]] = (game \ "resourceFiles").validate[Seq[String]]
+        Json.obj(
+            "id" -> JsString(id.getOrElse("")),
+            "name" -> JsString(name.getOrElse("")),
+            "mainFile" -> JsString(mainFile.getOrElse("")),
+            "resourceFiles" -> JsArray(resourceFiles.getOrElse(Seq.empty[String]).map(JsString(_)))
+        )
     }
 }

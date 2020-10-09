@@ -15,15 +15,12 @@ See: https://www.playframework.com/documentation/2.8.x/PlayConsole
     [container] [games] $ run
 
 
-# Security #
-
-No validation on userID, gameName, gameStatus.
-Validation should be performed on a higher level.
-Thus, the API/games endpoints should be private and not exposed to public.
-
 # Secrets #
 
 Secrets are set to environment variables when container is started.
-Current secrets: MONGO_CONNECTION_STRING.
 
-Source code contains no secrets, and should never do so!
+Current secrets: MONGO_CONNECTION_STRING
+
+# TODO #
+
+Responses in JSON format.
