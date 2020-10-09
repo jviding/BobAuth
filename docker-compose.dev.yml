@@ -60,13 +60,13 @@ services:
             - ./secrets/iam/POSTGRES_PASSWORD:/secrets/POSTGRES_PASSWORD
             - ./secrets/iam/SECRET_KEY:/secrets/SECRET_KEY
         # Use if should be available on host
-        #ports:
-        #    - "8000:8000"
+        ports:
+            - "8000:8000"
         command: python3 -u manage.py runserver 0.0.0.0:8000
         depends_on:
             - data-iam
 
-    api-fs:
+    api-files:
         build:
             context: ./API/files
             dockerfile: dev.Dockerfile
@@ -74,8 +74,9 @@ services:
         volumes:
             - ./API/files:/app
             - ./data/files/gameFiles:/uploads
-        #ports:
-        #    - "9090:9090"
+        # Use if should be available on host
+        ports:
+            - "9090:9090"
         command: lein run
 
     data-games:
