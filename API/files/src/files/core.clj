@@ -11,7 +11,7 @@
             [ring.middleware.json :refer [wrap-json-body, wrap-json-response]]
             [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             [files.endpoints.get :refer [getFile, getFilesInfo]]
-            [files.endpoints.post :refer [postFile]]
+            [files.endpoints.post :refer [createDirectory, postFile]]
             [files.endpoints.delete :refer [deleteDirectory, deleteFile]]))
 
 ;; TODO
@@ -25,6 +25,9 @@
           type (get (get request :route-params) :type)
           filename (get (get request :route-params) :filename)]
       (getFile gameID type filename)))
+  (POST "/:gameID" request
+    (let [gameID (get (get request :route-params) :gameID)]
+      (createDirectory gameID)))
   (POST "/:gameID/:type" request
     (let [gameID (get (get request :route-params) :gameID)
           type (get (get request :route-params) :type)
