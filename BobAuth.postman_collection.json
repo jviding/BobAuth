@@ -126,7 +126,7 @@
 								"header": [
 									{
 										"key": "Cookie",
-										"value": "sessionid={{cookie}}",
+										"value": "sessionid={{session}}",
 										"type": "text"
 									}
 								],
@@ -138,6 +138,297 @@
 									"path": [
 										"api",
 										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update user",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"userID\":\"11\",\"email\":\"a@b.c\",\"isAdmin\":false}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/user",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete user",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"userID\":\"19\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/user",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get games",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{admin_url}}/api/games",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"games"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get game",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{admin_url}}/api/game/5f80f498bc0000bc00a82732",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"game",
+										"5f80f498bc0000bc00a82732"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create game",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"gameName\":\"asdaa\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/game",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"game"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update game",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"gameID\":\"5f81e29ca60000ab01a2f6c8\",\"newName\":\"qwert\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/game",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"game"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete game",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"gameID\":\"5f81e29ca60000ab01a2f6c8\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/game",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"game"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Upload game file",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "gameID",
+											"value": "5f80f498bc0000bc00a82732",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "main",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/home/jviding/Documents/some.html"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/gamefile",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"gamefile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete game file",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"gameID\":\"5f80f498bc0000bc00a82732\",\"type\":\"main\",\"filename\":\"some.html\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/gamefile",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"gamefile"
 									]
 								}
 							},
@@ -296,12 +587,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{files_url}}/12345123451234512345",
+									"raw": "{{files_url}}/5f818b2bb901000d0273d0aa",
 									"host": [
 										"{{files_url}}"
 									],
 									"path": [
-										"12345123451234512345"
+										"5f818b2bb901000d0273d0aa"
 									]
 								}
 							},
@@ -313,12 +604,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{files_url}}/12345123451234512345/main/some.html",
+									"raw": "{{files_url}}/5f80f498bc0000bc00a82732/main/some.html",
 									"host": [
 										"{{files_url}}"
 									],
 									"path": [
-										"12345123451234512345",
+										"5f80f498bc0000bc00a82732",
 										"main",
 										"some.html"
 									]
