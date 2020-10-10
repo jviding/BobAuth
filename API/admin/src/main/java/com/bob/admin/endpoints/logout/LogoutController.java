@@ -23,9 +23,10 @@ public class LogoutController {
     ) {
         Request req = new Request("POST", "iam", "logout");
         Response res = req.send(cookie);
-        response.setStatus(res.getResponseCode());
-        if (res.hasSessionCookie()) {
+        if (res.getResponseCode() == 200 && res.hasSessionCookie()) {
             response.addHeader("Set-Cookie", res.getSessionCookie());
+        } else {
+            response.setStatus(400);
         }
         return "{}";
     }

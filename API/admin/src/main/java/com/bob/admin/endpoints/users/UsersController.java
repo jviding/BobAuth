@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bob.admin.lib.AuthService;
 import com.bob.admin.lib.http.Request;
 import com.bob.admin.lib.http.Response;
 
@@ -23,18 +22,17 @@ public class UsersController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        if (AuthService.isAdmin(cookie)) { 
-            Request req = new Request("GET", "iam", "users");
-            Response res = req.send(cookie);
-            response.setStatus(res.getResponseCode());
-            if (res.getResponseCode() == 200) {
-                return res.getResponseBody();
-            } else {
-                return "{}";
-            }
+        Request req = new Request("GET", "iam", "users");
+        Response res = req.send(cookie);
+        response.setStatus(res.getResponseCode());
+
+        System.out.println(res.getResponseCode());
+
+        if (res.getResponseCode() == 200) {
+            return res.getResponseBody();
         } else {
-            response.setStatus(403);
             return "{}";
-        }       
+        }
+       
     }
 }

@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bob.admin.lib.AuthService;
 import com.bob.admin.lib.http.JsonRequest;
 import com.bob.admin.lib.http.Response;
 
@@ -26,22 +25,17 @@ public class UserController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        if (AuthService.isAdmin(cookie)) {
-            JsonRequest req = new JsonRequest("PUT", "iam", "user");
-            req.addBodyParams("userID", put.userID);
-            req.addBodyParams("email", put.email);
-            req.addBodyParams("isAdmin", put.isAdmin);
-            Response res = req.send(cookie);
-            response.setStatus(res.getResponseCode());
-            if (res.getResponseCode() == 200) {
-                return res.getResponseBody();
-            } else {
-                return "{}";
-            }
+        JsonRequest req = new JsonRequest("PUT", "iam", "user");
+        req.addBodyParams("userID", put.userID);
+        req.addBodyParams("email", put.email);
+        req.addBodyParams("isAdmin", put.isAdmin);
+        Response res = req.send(cookie);
+        if (res.getResponseCode() == 200) {
+            return res.getResponseBody();
         } else {
-            response.setStatus(403);
+            response.setStatus(400);
             return "{}";
-        } 
+        }
     }
 
     @DeleteMapping(
@@ -54,20 +48,15 @@ public class UserController {
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
     ) {
-        if (AuthService.isAdmin(cookie)) {
-            JsonRequest req = new JsonRequest("DELETE", "iam", "user");
-            req.addBodyParams("userID", delete.userID);
-            Response res = req.send(cookie);
-            response.setStatus(res.getResponseCode());
-            if (res.getResponseCode() == 200) {
-                return res.getResponseBody();
-            } else {
-                return "{}";
-            }
+        JsonRequest req = new JsonRequest("DELETE", "iam", "user");
+        req.addBodyParams("userID", delete.userID);
+        Response res = req.send(cookie);
+        if (res.getResponseCode() == 200) {
+            return res.getResponseBody();
         } else {
-            response.setStatus(403);
+            response.setStatus(400);
             return "{}";
-        }        
+        }
     }
 
 }

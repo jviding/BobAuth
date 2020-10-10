@@ -26,10 +26,10 @@ public class ProfileController {
     ) {
         Request req = new Request("GET", "iam", "profile");
         Response res = req.send(cookie);
-        response.setStatus(res.getResponseCode());
         if (res.getResponseCode() == 200) {
             return res.getResponseBody();
         } else {
+            response.setStatus(400);
             return "{}";
         }
     }
@@ -49,13 +49,11 @@ public class ProfileController {
         req.addBodyParams("newPassword", put.newPassword);
         req.addBodyParams("password", put.password);
         Response res = req.send(cookie);
-        response.setStatus(res.getResponseCode());
-        if (res.hasSessionCookie()) {
+        if (res.getResponseCode() == 200 && res.hasSessionCookie()) {
             response.addHeader("Set-Cookie", res.getSessionCookie());
-        }
-        if (res.getResponseCode() == 200) {
             return res.getResponseBody();
-        } else {
+        }else {
+            response.setStatus(400);
             return "{}";
         }
     }

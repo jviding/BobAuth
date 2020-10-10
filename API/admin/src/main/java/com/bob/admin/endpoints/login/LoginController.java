@@ -33,7 +33,7 @@ public class LoginController {
         try {
             JSONObject userProfile = res.getResponseBodyAsJSONObject();
             boolean IS_ADMIN = Boolean.parseBoolean(userProfile.get("isAdmin").toString());
-            if (IS_ADMIN && res.hasSessionCookie()) {
+            if (res.getResponseCode() == 200 && IS_ADMIN && res.hasSessionCookie()) {
                 response.addHeader("Set-Cookie", res.getSessionCookie());
                 return "{}";
             } else {
