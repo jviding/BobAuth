@@ -8,12 +8,13 @@ services:
         restart: always
         volumes:
             - ./API/admin:/admin
-        command: ./mvnw spring-boot:run
         ports:
             - "7000:7000"
+        command: ./mvnw spring-boot:run
         depends_on:
             - api-games
             - api-iam
+            - api-files
 
     api-games:
         build:
@@ -27,12 +28,12 @@ services:
         # Use if should be available on host
         ports:
             - "9000:9000"
-        #command: sbt run
+        command: sbt run
         # Use sbt in interactive mode during development
         # 1. docker exec -it bobauth_api-games_1 /bin/bash
         # 2. $ sbt
         # 3. [games] $ run
-        command: sleep 36000
+        #command: sleep 36000
         depends_on:
             - data-games
 
@@ -49,6 +50,7 @@ services:
         depends_on:
             - api-games
             - api-iam
+            - api-files
 
     api-iam:
         build:

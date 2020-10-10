@@ -10,7 +10,140 @@
 			"item": [
 				{
 					"name": "admin",
-					"item": [],
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"username\":\"{{username}}\",\"password\":\"{{password}}\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/login",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{admin_url}}/api/logout",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get profile",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{admin_url}}/api/profile",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update profile",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"newEmail\":\"asd@bob.com\",\"password\":\"asd\",\"newPassword\":\"\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin_url}}/api/profile",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{cookie}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{admin_url}}/api/users",
+									"host": [
+										"{{admin_url}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
@@ -40,7 +173,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": ""
+									"raw": "{{games_url}}/game/5f80f498bc0000bc00a82732",
+									"host": [
+										"{{games_url}}"
+									],
+									"path": [
+										"game",
+										"5f80f498bc0000bc00a82732"
+									]
 								}
 							},
 							"response": []
@@ -50,22 +190,14 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\"gameName\":\"qweaassd\"}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{games_url}}/game",
+									"raw": "{{games_url}}/game/bob",
 									"host": [
 										"{{games_url}}"
 									],
 									"path": [
-										"game"
+										"game",
+										"bob"
 									]
 								}
 							},
@@ -86,12 +218,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{games_url}}/game",
+									"raw": "{{games_url}}/game/5f80f476bc0000bc00a82731/name",
 									"host": [
 										"{{games_url}}"
 									],
 									"path": [
-										"game"
+										"game",
+										"5f80f476bc0000bc00a82731",
+										"name"
 									]
 								}
 							},
@@ -102,22 +236,14 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\"gameID\":\"5f2ad0f1333d8542c5faf859\"}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{games_url}}/game",
+									"raw": "{{games_url}}/game/5f80f476bc0000bc00a82731",
 									"host": [
 										"{{games_url}}"
 									],
 									"path": [
-										"game"
+										"game",
+										"5f80f476bc0000bc00a82731"
 									]
 								}
 							},
@@ -170,7 +296,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": ""
+									"raw": "{{files_url}}/12345123451234512345",
+									"host": [
+										"{{files_url}}"
+									],
+									"path": [
+										"12345123451234512345"
+									]
 								}
 							},
 							"response": []
@@ -181,9 +313,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{files_url}}",
+									"raw": "{{files_url}}/12345123451234512345/main/some.html",
 									"host": [
 										"{{files_url}}"
+									],
+									"path": [
+										"12345123451234512345",
+										"main",
+										"some.html"
 									]
 								}
 							},
@@ -195,12 +332,12 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{games_url}}/123",
+									"raw": "{{files_url}}/1234512345123451234512",
 									"host": [
-										"{{games_url}}"
+										"{{files_url}}"
 									],
 									"path": [
-										"123"
+										"1234512345123451234512"
 									]
 								}
 							},
@@ -211,10 +348,24 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/home/jviding/Documents/some.html"
+										}
+									]
+								},
 								"url": {
-									"raw": "{{files_url}}",
+									"raw": "{{files_url}}/12345123451234512345/main",
 									"host": [
 										"{{files_url}}"
+									],
+									"path": [
+										"12345123451234512345",
+										"main"
 									]
 								}
 							},
@@ -226,9 +377,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{files_url}}",
+									"raw": "{{files_url}}/12345123451234512345/main/some.html",
 									"host": [
 										"{{files_url}}"
+									],
+									"path": [
+										"12345123451234512345",
+										"main",
+										"some.html"
 									]
 								}
 							},
@@ -240,12 +396,12 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{files_url}}/1234",
+									"raw": "{{files_url}}/12345123451234512345",
 									"host": [
 										"{{files_url}}"
 									],
 									"path": [
-										"1234"
+										"12345123451234512345"
 									]
 								}
 							},
