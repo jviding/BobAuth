@@ -14,6 +14,11 @@ def login(request):
     user = auth.authenticate(username=username, password=password)
     if user is not None:
         auth.login(request, user)
-        return JsonResponse({})
+        return JsonResponse({
+            "userID": user.id,
+            "username": user.username,
+            "email": user.email,
+            "isAdmin": user.is_superuser
+        })
     else:
         return HttpResponseNotFound("Failure")
