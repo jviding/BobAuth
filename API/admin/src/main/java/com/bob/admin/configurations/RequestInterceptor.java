@@ -46,9 +46,12 @@ public class RequestInterceptor
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        boolean NOT_LOGIN_REQUEST = !request.getRequestURI().equals("/login");
+        boolean IS_LOGIN_REQUEST = request.getRequestURI().equals("/login");
+        System.out.println(request.getRequestURI().equals("/login"));
         boolean IS_ADMIN = isAdmin(request);
-        if (NOT_LOGIN_REQUEST && IS_ADMIN) {
+        if (IS_LOGIN_REQUEST) {
+            return true;
+        } else if (IS_ADMIN) {
             return true;
         } else {
             response.setStatus(403);
