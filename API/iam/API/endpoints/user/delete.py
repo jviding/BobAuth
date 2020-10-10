@@ -9,7 +9,10 @@ def delete(request):
 
         try:
             user = User.objects.get(id=userID)
-            user.delete()
+
+            if user.id != request.user.id:
+                user.delete()
+
             return JsonResponse({})
 
         except User.DoesNotExist:

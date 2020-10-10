@@ -11,9 +11,12 @@ def update(request):
 
         try:
             user = User.objects.get(id=userID)
-            user.email = email
-            user.is_superuser = isAdmin
-            user.save()
+
+            if user.id != request.user.id:
+                user.email = email
+                user.is_superuser = isAdmin
+                user.save()
+
             return JsonResponse({})
 
         except User.DoesNotExist:

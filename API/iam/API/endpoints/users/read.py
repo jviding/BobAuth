@@ -7,12 +7,13 @@ def read(request):
         result = { "users": [] }
 
         for user in User.objects.all():
-            result["users"].append({
-                "userID": user.id,
-                "username": user.username,
-                "email": user.email,
-                "isAdmin": user.is_superuser
-            })
+            if user.id != request.user.id:
+                result["users"].append({
+                    "userID": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "isAdmin": user.is_superuser
+                })
 
         return JsonResponse(result)
 
