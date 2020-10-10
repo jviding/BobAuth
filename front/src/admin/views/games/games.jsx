@@ -47,7 +47,8 @@ export default class Games extends React.Component {
             return (
                 <Game
                     key={index}
-                    game={game}
+                    id={game.id}
+                    name={game.name}
                     gameCount={this.state.games.length}
                     update={this.loadGames} />
                 )

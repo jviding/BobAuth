@@ -14,6 +14,7 @@ export default class BobAPI {
         this.updateProfile = this.updateProfile.bind(this)
 
         this.getGames = this.getGames.bind(this)
+        this.getGame = this.getGame.bind(this)
         this.createGame = this.createGame.bind(this)
         this.updateGame = this.updateGame.bind(this)
         this.deleteGame = this.deleteGame.bind(this)
@@ -33,6 +34,8 @@ export default class BobAPI {
         return this.Requests.POST(this.URLs.logout, {})
     }
 
+    // PROFILE
+
     getProfile() {
         return this.Requests.GET(this.URLs.profile)
     }
@@ -48,13 +51,17 @@ export default class BobAPI {
         return this.Requests.GET(this.URLs.games)
     }
 
+    getGame(gameID) {
+        return this.Requests.GET(this.URLs.game + "/" + gameID)
+    }
+
     createGame(gameName) {
         const BODY = { gameName: gameName }
         return this.Requests.POST(this.URLs.game, BODY)
     }
 
-    updateGame(gameID, newGameName, removedResourceFiles) {
-        const BODY = { gameID: gameID, newGameName: newGameName, removedResourceFiles: removedResourceFiles }
+    updateGame(gameID, newName) {
+        const BODY = { gameID: gameID, newName: newName }
         return this.Requests.PUT(this.URLs.game, BODY)
     }
 
@@ -63,12 +70,19 @@ export default class BobAPI {
         return this.Requests.DELETE(this.URLs.game, BODY)
     }
 
-    uploadGameFile(gameID, fileType, file) {
+    // FILES
+
+    uploadGameFile(gameID, type, file) {
         const fd = new FormData()
         fd.append('gameID', gameID)
-        fd.append('fileType', fileType)
+        fd.append('type', type)
         fd.append('file', file)
         return this.Requests.POSTFile(this.URLs.gameFile, fd)
+    }
+
+    deleteGameFile(gameID, type, filename) {
+        const BODY = { gameID: gameID, type: type, filename: filename }
+        return this.Requests.DELETE(this.URLs.gameFile, BODY)
     }
 
     // USERS

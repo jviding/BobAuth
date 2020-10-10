@@ -12,6 +12,12 @@ export default class ResourceFile extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.name !== this.props.name) {
+            this.setState({ state: '' })
+        }
+    }
+
     componentDidMount() {
         if (this.props.isNew) {
             this.setState({ state: 'new' })
@@ -35,7 +41,7 @@ export default class ResourceFile extends React.Component {
             case 'removed':
                 return (
                     <tr>
-                        <td className={styles.red}>Removed:</td>
+                        <td className={styles.red}>Remove:</td>
                         {FILENAME}
                         <td></td>
                     </tr>

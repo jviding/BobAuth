@@ -24,8 +24,8 @@ class Index extends React.Component {
     }
 
     checkSession() {
-        console.warn("TODO: index.js uncomment checkSession()")
-        console.warn("TODO: If user is removed, leaves next block open?")
+        //TODO: index.js uncomment checkSession()
+        //TODO: If user is removed, leaves next block open?
         window.BobAPI.getProfile()
         .then((response) => {
             this.setState({ view: 'main', isAuthenticated: true })
@@ -51,7 +51,7 @@ class Index extends React.Component {
                     <div className={styles.b}>
                         <div className={styles.c}>
                             <div className={styles.jumbotron}>
-                                {this.state.view === 'main' && <Main isAuthenticated={this.state.isAuthenticated} />}
+                                {this.state.view === 'main' && <Main />}
                                 {this.state.view === 'games' && <Games />}
                                 {this.state.view === 'login' && <Login wasLoggedIn={this.checkSession} />}
                                 {this.state.view === 'profile' && <Profile />}
