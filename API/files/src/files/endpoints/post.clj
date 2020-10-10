@@ -29,7 +29,7 @@
     :else (do
             (.mkdir (io/file (str "/uploads/" gameID)))
             (.mkdir (io/file (str "/uploads/" gameID "/main")))
-            (.mkdir (io/file (str "/uploads/" gameID "/resources")))
+            (.mkdir (io/file (str "/uploads/" gameID "/resource")))
             (response {:message "Success"}))))
 
 (defn postFile [gameID type file]
