@@ -5,10 +5,15 @@
             [ring.util.response :refer [response, bad-request]]))
 
 
-(defn- hasDir [gameID] 
+(defn- hasDir [gameID]
   (.exists (io/file (str "/uploads/" gameID))))
 
+(defn- deleteMainFile [gameID]
+  (let [files (.listFiles (io/file (str "/uploads/" gameID "/main/")))]
+    (doseq [file files] (io/delete-file (.getPath file)))))
+
 (defn- saveFile [gameID type file]
+  (if (= type "main") (deleteMainFile gameID) false)
   (let [input (get file :tempfile)
         filenameAsHex (hexify (get file :filename))
         filePath (str "/uploads/" gameID "/" type "/" filenameAsHex)

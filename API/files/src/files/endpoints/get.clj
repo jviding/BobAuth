@@ -11,7 +11,7 @@
     (map unhexify fNames)))
 
 
-(defn getFilesInfo [gameID] 
+(defn getFilesInfo [gameID]
   (cond
     (not (isValidGameID gameID)) (bad-request {:message "Invalid gameID"})
     (not (.isDirectory (io/file "/uploads/" gameID))) (bad-request {:message "Unknown gameID"})

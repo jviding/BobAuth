@@ -12,7 +12,8 @@
             [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             [files.endpoints.get :refer [getFile, getFilesInfo]]
             [files.endpoints.post :refer [createDirectory, postFile]]
-            [files.endpoints.delete :refer [deleteDirectory, deleteFile]]))
+            [files.endpoints.delete :refer [deleteDirectory, deleteFile]]
+            [files.middleware.logger :refer [logger]]))
 
 ;; TODO
 ;; Schema + validation
@@ -48,7 +49,8 @@
       wrap-multipart-params
       wrap-json-body
       wrap-json-response
-      wrap-reload))
+      wrap-reload
+      logger))
 
 (defn -main
   []

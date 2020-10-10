@@ -2,7 +2,11 @@
 
 $ lein run
 
-Listens at port 9090.
+Or with live-reloading:
+
+$ lein ring server-headless 9090
+
+Server listens at port 9090.
 
 ## Details
 
