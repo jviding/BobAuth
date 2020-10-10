@@ -1,13 +1,13 @@
 package configurations
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import javax.inject.Inject
 import akka.stream.Materializer
 import play.api.mvc._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class ResponseFilter @Inject() (implicit val mat: Materializer, ec: ExecutionContext) extends Filter {
@@ -27,8 +27,6 @@ class ResponseFilter @Inject() (implicit val mat: Materializer, ec: ExecutionCon
     }
 
     private def getTimeStamp(): String = {
-        DateTimeFormatter
-        .ofPattern("dd/LLL/yyyy HH:mm:ss")
-        .format(LocalDateTime.now())
+        (new SimpleDateFormat("dd/LLL/yyyy HH:mm:ss")).format(new Date()).toString()
     }
 }

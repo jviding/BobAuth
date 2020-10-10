@@ -37,8 +37,6 @@ public class RequestInterceptor
     }
 
     private String getTimeStamp() {
-        //java.text.SimpleDateFormat. "dd/LLL/yyyy"
-        //(.format (java.text.SimpleDateFormat. "dd/LLL/yyyy") (new java.util.Date))
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/LLL/yyyy HH:mm:ss");  
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
