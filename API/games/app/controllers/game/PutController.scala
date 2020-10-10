@@ -36,49 +36,33 @@ class PutController @Inject() (
 
     def gamesCollection: Future[BSONCollection] = database.map(_.collection[BSONCollection]("games"))
 
+    private def update(gameID: String, newName: String): Future[Boolean] = {
+        BSONObjectID.parse(gameID) match {
+            case Failure(e) => Future { false }
+            case Success(id) => {
+                val selector = BSONDocument("_id" -> id)
+                val update = BSONDocument("$set" -> BSONDocument("name" -> newName))
+                gamesCollection.flatMap(
+                    _.findAndUpdate(selector, update)
+                    .map(_.result[BSONDocument])
+                    .map {
+                        case Some(item) => true
+                        case None => false
+                    }
+                )
+            }
+        }
+    }
+
 
     def updateGame(gameID: String, newName: String) = Action.async {
         (isValidGameID(gameID), isValidGameName(newName)) match {
             case (false, _) => Future { BadRequest("Invalid gameID") }
             case (_, false) => Future { BadRequest("Invalid game name") }
-            case (true, true) => {
-                //val selector = BSONDocument("_id")
-                //val update = BSONDocument("$set" -> BSONDocument("name" -> newName))
-                //val projection = ??
-
-                Future { Ok("Success") }
+            case (true, true) => update(gameID, newName).map {
+                    case false => BadRequest("Something went wrong")
+                    case true => Ok("Success")
             }
         }
-/*
-        val gameState: JsObject = request.body.as[JsObject]
-
-        val selector = BSONDocument("userID" -> userID, "gameName" -> gameName)
-        val update = BSONDocument("$set" -> BSONDocument("gameState" -> gameState))
-        val projection: Option[BSONDocument] = Some(BSONDocument("_id" -> 0, "gameState" -> 1))
-
-        val gameOption: Future[Option[JsObject]] = playersCollection.flatMap(
-            _.findAndUpdate(
-                selector,
-                update,
-                fetchNewObject = true,
-                upsert = true,
-                fields = projection
-            )
-            .map(_.result[JsObject])
-        )
-
-        val gameStateOption: Future[Any] = gameOption.map {
-            case Some(game) => game \ "gameState"
-            case None => None
-        }
-
-        gameStateOption.map {
-            case JsDefined(gameState) => Ok(gameState)
-            case undefined: JsUndefined => NotFound
-            case None => NotFound
-        }
-
-
-        Future { Ok("") }*/
     }
 }
