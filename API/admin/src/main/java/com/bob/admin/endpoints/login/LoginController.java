@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
+
 import com.bob.admin.lib.http.JsonRequest;
 import com.bob.admin.lib.http.Response;
 
@@ -28,10 +30,18 @@ public class LoginController {
         req.addBodyParams("username", login.username);
         req.addBodyParams("password", login.password);
         Response res = req.send(cookie);
-        response.setStatus(res.getResponseCode());
-        if (res.hasSessionCookie()) {
-            response.addHeader("Set-Cookie", res.getSessionCookie());
+        try {
+            JSONObject userProfile = res.getResponseBodyAsJSONObject();
+            boolean IS_ADMIN = Boolean.parseBoolean(userProfile.get("isAdmin").toString());
+            if (IS_ADMIN && res.hasSessionCookie()) {
+                response.addHeader("Set-Cookie", res.getSessionCookie());
+                return "{}";
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            response.setStatus(400);
+            return "{}";
         }
-        return "{}";
     }
 }

@@ -17,7 +17,7 @@ public class RequestInterceptor
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         return true;
     }
- 
+
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         String timeStamp = getTimeStamp();
