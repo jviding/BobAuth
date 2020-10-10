@@ -46,13 +46,9 @@ class GamesController @Inject() (
     private def formatGame(game: JsObject): JsObject = {
         val id: JsResult[String] = (game \ "_id" \ "$oid").validate[String]
         val name: JsResult[String] = (game \ "name").validate[String]
-        val mainFile: JsResult[String] = (game \ "mainFile").validate[String]
-        val resourceFiles: JsResult[Seq[String]] = (game \ "resourceFiles").validate[Seq[String]]
         Json.obj(
             "id" -> JsString(id.getOrElse("")),
-            "name" -> JsString(name.getOrElse("")),
-            "mainFile" -> JsString(mainFile.getOrElse("")),
-            "resourceFiles" -> JsArray(resourceFiles.getOrElse(Seq.empty[String]).map(JsString(_)))
+            "name" -> JsString(name.getOrElse(""))
         )
     }
 }
