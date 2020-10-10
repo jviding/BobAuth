@@ -3,8 +3,11 @@ package com.bob.admin.configurations;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.bob.admin.lib.AuthService;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -13,9 +16,25 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 public class RequestInterceptor 
   extends HandlerInterceptorAdapter {
  
+    private boolean isAdmin(HttpServletRequest request) {
+        for (Cookie c : request.getCookies()) {
+            if (c.getName().equals("sessionid")) {
+                return AuthService.isAdmin(c.getValue());
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        return true;
+        boolean NOT_LOGIN_REQUEST = !request.getRequestURI().equals("/login");
+        boolean IS_ADMIN = isAdmin(request);
+        if (NOT_LOGIN_REQUEST && IS_ADMIN) {
+            return true;
+        } else {
+            response.setStatus(403);
+            return false;
+        }
     }
 
     @Override
