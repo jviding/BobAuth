@@ -2,7 +2,6 @@ package com.bob.admin.endpoints.games;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bob.admin.lib.AuthService;
 import com.bob.admin.lib.http.Request;
 import com.bob.admin.lib.http.Response;
 
@@ -20,18 +19,13 @@ public class GamesController {
     public String getGames(
         @CookieValue(name = "sessionid", defaultValue = "") String cookie,
         HttpServletResponse response
-    ) {
-        if (AuthService.isAdmin(cookie)) {     
-            Request req = new Request("GET", "games", "games");
-            Response res = req.send();
-            response.setStatus(res.getResponseCode());
-            if (res.getResponseCode() == 200) {
-                return res.getResponseBody();
-            } else {
-                return "{}";
-            }
+    ) {    
+        Request req = new Request("GET", "games", "games");
+        Response res = req.send();
+        if (res.getResponseCode() == 200) {
+            return res.getResponseBody();
         } else {
-            response.setStatus(403);
+            response.setStatus(400);
             return "{}";
         }
     }

@@ -24,15 +24,11 @@ public class UsersController {
     ) {
         Request req = new Request("GET", "iam", "users");
         Response res = req.send(cookie);
-        response.setStatus(res.getResponseCode());
-
-        System.out.println(res.getResponseCode());
-
         if (res.getResponseCode() == 200) {
             return res.getResponseBody();
         } else {
+            response.setStatus(400);
             return "{}";
         }
-       
     }
 }

@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileRequest extends Request {
@@ -34,8 +33,14 @@ public class FileRequest extends Request {
         }
     }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public boolean setFile(MultipartFile file) {
+        boolean HAS_VALID_NAME = file.getOriginalFilename().matches("^[a-zA-Z0-9]{1,25}[.][a-zA-Z0-9]{1,5}$");
+        if (HAS_VALID_NAME) {
+            this.file = file;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -61,20 +66,6 @@ public class FileRequest extends Request {
 
 
     // PRIVATE
-
-    private String getSecureFilenameHex(String filename) {
-        return DigestUtils.md5DigestAsHex(filename.getBytes());
-    }
-
-    private String getSecureFileNameSuffix(String filename) {
-        String[] splitString = filename.split("\\.");
-        String suffix = splitString[splitString.length - 1];
-        if (splitString.length > 1 && suffix.matches("^[a-zA-Z]*$")) {
-            return suffix;
-        } else {
-            throw new IllegalArgumentException("Invalid or missing filename suffix!");
-        }
-    }
 
     private String getSecureContentType(MultipartFile file) {
         String contentType = this.file.getContentType();
@@ -112,13 +103,12 @@ public class FileRequest extends Request {
 
     private byte[] getFileField() throws IOException {
         if (this.file != null && this.file.getSize() > 0) {
-            String filename = getSecureFilenameHex(this.file.getOriginalFilename());
-            String suffix = getSecureFileNameSuffix(this.file.getOriginalFilename());
+            String filename = this.file.getOriginalFilename();
             String contentType = getSecureContentType(this.file);      
 
             String lines = "";
             lines += "--" + BOUNDARY + LINE_FEED;
-            lines += "Content-Disposition: form-data; name=\"file\"; filename=\"" + filename + "." + suffix + "\"" + LINE_FEED;
+            lines += "Content-Disposition: form-data; name=\"file\"; filename=\"" + filename + "\"" + LINE_FEED;
             lines += "Content-Type: \"" + contentType + "\"; charset=utf-8" + LINE_FEED;
             lines += LINE_FEED;
     

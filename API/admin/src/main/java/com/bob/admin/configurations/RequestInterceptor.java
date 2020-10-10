@@ -17,12 +17,31 @@ public class RequestInterceptor
   extends HandlerInterceptorAdapter {
  
     private boolean isAdmin(HttpServletRequest request) {
-        for (Cookie c : request.getCookies()) {
-            if (c.getName().equals("sessionid")) {
-                return AuthService.isAdmin(c.getValue());
+        if (request.getCookies() != null) {
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals("sessionid")) {
+                    return AuthService.isAdmin(c.getValue());
+                }
             }
         }
         return false;
+    }
+
+    private void printHttpLog(HttpServletRequest request, HttpServletResponse response) {
+        String timeStamp = getTimeStamp();
+        String method = request.getMethod();
+        String path = request.getRequestURI();    
+        String httpProtocol = request.getProtocol();
+        int status = response.getStatus();
+        System.out.println("[" + timeStamp + "] \"" + method + " " + path + " " + httpProtocol + "\" " + status);
+    }
+
+    private String getTimeStamp() {
+        //java.text.SimpleDateFormat. "dd/LLL/yyyy"
+        //(.format (java.text.SimpleDateFormat. "dd/LLL/yyyy") (new java.util.Date))
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/LLL/yyyy HH:mm:ss");  
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
     }
 
     @Override
@@ -33,24 +52,14 @@ public class RequestInterceptor
             return true;
         } else {
             response.setStatus(403);
+            printHttpLog(request, response);
             return false;
         }
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        String timeStamp = getTimeStamp();
-        String method = request.getMethod();
-        String path = request.getRequestURI();    
-        String httpProtocol = request.getProtocol();
-        int status = response.getStatus();
-
-        System.out.println("[" + timeStamp + "] \"" + method + " " + path + " " + httpProtocol + "\" " + status);
+        printHttpLog(request, response);
     }
 
-    private String getTimeStamp() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/LLL/yyyy HH:mm:ss");  
-        LocalDateTime now = LocalDateTime.now();
-        return dtf.format(now);
-    }
 }

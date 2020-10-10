@@ -24,6 +24,10 @@ public class RequestUrl {
         }
     }
 
+    public void addPathParam(String param) {
+        this.url += "/" + param;
+    }
+
     public URL getUrl() throws MalformedURLException {
         if (this.queryParams != null && !this.queryParams.isEmpty()) {
             return new URL(this.url + this.queryParams);
@@ -40,6 +44,8 @@ public class RequestUrl {
                 return "http://api-iam:8000";
             case "games":
                 return "http://api-games:9000";
+            case "files":
+                return "http://api-files:9090";
             default:
                 throw new IllegalArgumentException("Unknown host.");
         }
@@ -64,7 +70,7 @@ public class RequestUrl {
             case "games":
                 return "/games";
             default:
-                throw new IllegalArgumentException("Unknown endpoint.");
+                return "";
         }
     }
 
