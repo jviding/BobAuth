@@ -2,7 +2,7 @@
 
 const sendRequest = require('../lib/sendRequest.js')
 
-module.exports = (req) => {
+module.exports = (req, res) => {
 
     const REQ_OPTIONS = {
         method: 'POST',
@@ -17,12 +17,13 @@ module.exports = (req) => {
     }
 
     return sendRequest(req, REQ_OPTIONS)
-        .then((res) => {
-            if (res.statusCode === 200) {
-                const COOKIES = res.headers['set-cookie']
-                return Promise.resolve(COOKIES)
+        .then((response) => {
+            if (response.statusCode === 200) {
+                const COOKIES = response.headers['set-cookie']
+                res.set({ 'set-cookie': COOKIES })
+                res.status(200).json({})
             } else {
-                return Promise.reject()
+                res.sendStatus(403).end()
             }
         })
 }

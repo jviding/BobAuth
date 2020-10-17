@@ -8,66 +8,19 @@ const port = 3000
 app.use(express.json())
 app.use(cookieParser())
 
-app.get('/games/load', (req, res) => {
-    (require('./endpoints/games/load.js'))(req)
-    .then((body) => res.status(200).json(body))
-    .catch((e) => {
-        console.log(e)
-        return Promise.reject()
-    })
-    .catch(() => res.sendStatus(403).end())
-})
+app.use((require('./lib/logHttpReq.js')))
 
-app.put('/games/save', (req, res) => {
-    (require('./endpoints/games/save.js'))(req)
-    .then((body) => res.status(200).json(body))
-    .catch((e) => {
-        console.log(e)
-        return Promise.reject()
-    })
-    .catch(() => res.sendStatus(403).end())
-})
+app.get('/games/load', (require('./endpoints/games/load.js')))
+app.put('/games/save', (require('./endpoints/games/save.js')))
 
-app.post('/login', (req, res) => {
-    (require('./endpoints/login.js'))(req)
-    .then((cookies) => {
-        res.set({ 'set-cookie': cookies })
-        res.status(200).json({})
-    })
-    .catch(() => res.sendStatus(404).end())
-})
+app.post('/login', (require('./endpoints/login.js')))
+app.post('/logout', (require('./endpoints/logout.js')))
 
-app.post('/logout', (req, res) => {
-    (require('./endpoints/logout.js'))(req)
-    .then((cookies) => {
-        res.set({ 'set-cookie': cookies })
-        res.status(200).json({})
-    })
-    .catch(() => res.sendStatus(404).end())
-})
+app.get('/profile', (require('./endpoints/profile/read.js')))
+app.put('/profile', (require('./endpoints/profile/update.js')))
 
-app.get('/profile', (req, res) => {
-    (require('./endpoints/profile/read.js'))(req)
-    .then((body) => res.status(200).json(body))
-    .catch(() => res.sendStatus(403).end())
-})
+app.post('/signup', (require('./endpoints/signup.js')))
 
-app.put('/profile', (req, res) => {
-    (require('./endpoints/profile/update.js'))(req)
-    .then(([cookies, body]) => {
-        if (!!cookies) res.set({ 'set-cookie': cookies })
-        res.status(200).json(body)
-    })
-    .catch(() => res.sendStatus(403).end())
-})
-
-app.post('/signup', (req, res) => {
-    (require('./endpoints/signup.js'))(req)
-    .then((cookies) => {
-        res.set({ 'set-cookie': cookies })
-        res.status(200).json({})
-    })
-    .catch(() => res.sendStatus(403).end())
-})
+app.use((req, res) => res.sendStatus(403).end())
 
 app.listen(port, () => console.log('Server running at http://localhost:' + port))

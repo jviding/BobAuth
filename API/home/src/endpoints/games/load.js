@@ -27,4 +27,10 @@ module.exports = (req) => {
                 return Promise.reject()
             }
         })
+        .then((body) => res.status(200).json(body))
+        .catch((e) => {
+            console.log(e)
+            return Promise.reject()
+        })
+        .catch(() => res.sendStatus(403).end())
 }
