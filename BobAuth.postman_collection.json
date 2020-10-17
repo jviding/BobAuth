@@ -574,7 +574,180 @@
 				},
 				{
 					"name": "home",
-					"item": [],
+					"item": [
+						{
+							"name": "Signup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"username\":\"boaabssa\",\"password\":\"bob\",\"email\":\"bob@asd.asd\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{home_url}}/api/signup",
+									"host": [
+										"{{home_url}}"
+									],
+									"path": [
+										"api",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"username\":\"bobs\",\"password\":\"bob\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{home_url}}/api/login",
+									"host": [
+										"{{home_url}}"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{home_url}}/api/logout",
+									"host": [
+										"{{home_url}}"
+									],
+									"path": [
+										"api",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get profile",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{home_url}}/api/profile",
+									"host": [
+										"{{home_url}}"
+									],
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update profile",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"newEmail\":\"asda@asd.com\",\"newPassword\":\"\",\"password\":\"asd\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{home_url}}/api/profile",
+									"host": [
+										"{{home_url}}"
+									],
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get games",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "sessionid={{session}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{home_url}}/api/games",
+									"host": [
+										"{{home_url}}"
+									],
+									"path": [
+										"api",
+										"games"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get game",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{home_url}}/api/game/5f823c78a600000607a2f6ce",
+									"host": [
+										"{{home_url}}"
+									],
+									"path": [
+										"api",
+										"game",
+										"5f823c78a600000607a2f6ce"
+									]
+								}
+							},
+							"response": []
+						}
+					],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
