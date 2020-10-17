@@ -4,7 +4,7 @@ module.exports = {
     iam: {
         hostname: 'api-iam',
         port: 8000,
-        paths: {
+        endpoints: {
             login: '/login',
             logout: '/logout',
             profile: '/profile',
@@ -14,8 +14,9 @@ module.exports = {
     games: {
         hostname: 'api-games',
         port: 9000,
-        paths: {
+        endpoints: {
             games: '/games',
+            game: '/game',
             load: '/load',
             save: '/save'
         }

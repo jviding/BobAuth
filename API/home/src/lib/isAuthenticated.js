@@ -1,23 +1,18 @@
 "use strict";
 
-const sendRequest = require('./sendRequest.js')
+const API = require('./internalAPI/API.js')
 
-module.exports = (req) => {
+module.exports = (req, res, next) => {
 
-    const REQ_OPTIONS = {
-        method: 'GET',
-        host: 'iam',
-        endpoint: 'profile',
-        urlParams: false,
-        payload: false
-    }
+    const COOKIE = (!!req.cookies.sessionid ? req.cookies.sessionid : '')
 
-    return sendRequest(req, REQ_OPTIONS)
-        .then((res) => {
-            if (res.statusCode === 200) {
-                return Promise.resolve(JSON.parse(res.body))
-            } else {
-                return Promise.reject()
-            }
-        })
+    API.getProfile(COOKIE)
+    .then((response) => {
+        if (response.statusCode === 200) {
+            req.user = JSON.parse(response.body)
+            next()
+        } else {
+            res.sendStatus(403).end()
+        }
+    })
 }

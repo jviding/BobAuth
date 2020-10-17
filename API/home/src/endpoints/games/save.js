@@ -1,11 +1,9 @@
 "use strict";
 
-const isAuthenticated = require('../../lib/isAuthenticated.js')
-const sendRequest = require('../../lib/sendRequest.js')
 
 module.exports = (req) => {
 
-    const REQ_OPTIONS = {
+    /*const REQ_OPTIONS = {
         method: 'PUT',
         host: 'games',
         endpoint: 'save',
@@ -32,5 +30,5 @@ module.exports = (req) => {
             console.log(e)
             return Promise.reject()
         })
-        .catch(() => res.sendStatus(403).end())
+        .catch(() => res.sendStatus(403).end())*/
 }
