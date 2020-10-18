@@ -1,56 +1,47 @@
 'use strict'
 import React from 'react'
 import buttonStyles from '../../components/button/button.module.scss'
+import Game from './game.jsx'
 
 export default class Main extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            username: '',
-
-            loaded: '',
-            saved: ''
+            games: []
         }
+        this.loadGames = this.loadGames.bind(this)
     }
 
-    loadGame() {
-        window.BobAPI.loadGame()
-        .then((res) => this.setState({ loaded: JSON.stringify(res) }))
-        .catch((e) => console.warn(e))
-    }
-
-    saveGame() {
-        window.BobAPI.saveGame(this.state.username)
-        .then((res) => this.setState({ saved: JSON.stringify(res) }))
+    loadGames() {
+        window.BobAPI.getGames()
+        .then((res) => this.setState({ games: res }))
         .catch((e) => console.warn(e))
     }
 
     componentDidMount() {
-        window.BobAPI.getProfile()
-        .then((response) => { this.setState({ username: response.username }) })
-        .catch((e) => { console.warn(e) })
+        this.loadGames()
     }
 
     render() {
         if (!!this.props.isAuthenticated) {
+
+            const GAMES = this.state.games.map((game, i) => {
+                return (<Game key={i} id={game.id} name={game.name} />)
+            })
+
             return (
                 <div>
-                    <h1>Hello, {this.state.username}!</h1>
-                    <div
-                        className={buttonStyles.btn}
-                        onClick={() => this.loadGame()}>
-                        Load
-                    </div>
-                    <br /><br />
-                    <div
-                        className={buttonStyles.btn}
-                        onClick={() => this.saveGame()}>
-                        Save
-                    </div>
-                    <br />
-                    <div>Load: {this.state.loaded}</div>
-                    <div>Save: {this.state.saved}</div>
+                    <h1>Play a game?</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        {GAMES}
+                    </table>
                 </div>
             )
         } else {

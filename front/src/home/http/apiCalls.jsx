@@ -51,4 +51,8 @@ export default class BobAPI {
         return this.Requests.PUT(this.URLs.profile, BODY)
     }
 
+    getGames() {
+        return this.Requests.GET(this.URLs.games)
+    }
+
 }

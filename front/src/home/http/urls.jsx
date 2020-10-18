@@ -10,6 +10,8 @@ export default class Urls {
         this.profile = BASE_URL + '/profile'
         this.signup = BASE_URL + '/signup'
 
+        this.games = BASE_URL + '/games'
+
         this.loadGame = BASE_URL + '/games/load'
         this.saveGame = BASE_URL + '/games/save'
     }

@@ -27,7 +27,7 @@ export default class Navbar extends React.Component {
                     {!!this.props.isAdmin &&
                         <div
                             className={styles.btn}
-                            onClick={() => console.warn('TODO: administration')}>
+                            onClick={() => window.open('http://admin.rpylkkanen.com', '_blank')}>
                             Administration
                         </div>
                     }
